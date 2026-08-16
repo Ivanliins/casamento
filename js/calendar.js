@@ -4,8 +4,8 @@
 
 const WeddingEventDetails = {
   title: "Casamento Izabela & Ivan",
-  description: "Celebração do matrimônio de Izabela & Ivan. Cerimônia e Recepção na Rua Abaíra, 264 - Lavras. Traje: Passeio Completo / Esporte Fino.",
-  location: "Rua Abaíra, 264 - Lavras, Guarulhos - SP",
+  description: "Celebração do matrimônio de Izabela & Ivan. Cerimônia e Recepção na R. Abaíra, 264 - Jardim IV Centenario, Guarulhos - SP, 07161-010.",
+  location: "R. Abaíra, 264 - Jardim IV Centenario, Guarulhos - SP, 07161-010",
   startDate: "2026-11-14T12:00:00",
   endDate: "2026-11-14T23:59:00"
 };

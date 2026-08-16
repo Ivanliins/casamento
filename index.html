@@ -175,7 +175,7 @@
         </p>
 
         <!-- Wedding Date & Venue Highlights -->
-        <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-sm sm:text-base font-medium text-stone-300 mb-8">
+        <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-sm sm:text-base font-medium text-stone-300 mb-8 text-center">
           <div class="flex items-center gap-2">
             <i data-lucide="calendar" class="w-4 h-4 text-[#FFE082]"></i>
             <span>14 de Novembro de 2026</span>
@@ -188,7 +188,7 @@
           <div class="hidden sm:block w-1.5 h-1.5 rounded-full bg-[#D4AF37]"></div>
           <div class="flex items-center gap-2">
             <i data-lucide="map-pin" class="w-4 h-4 text-[#FFE082]"></i>
-            <span>Rua Abaíra, 264 — Lavras</span>
+            <span>R. Abaíra, 264 - Jardim IV Centenario, Guarulhos - SP</span>
           </div>
         </div>
 
@@ -257,9 +257,9 @@
 
 
     <!-- ==========================================================================
-         3. EVENT DETAILS & LOGISTICS
+         3. EVENT DETAILS & LOGISTICS (2 CARDS MAIORES)
          ========================================================================== -->
-    <section id="evento" class="py-24 px-4 relative z-10 max-w-6xl mx-auto reveal-fade">
+    <section id="evento" class="py-24 px-4 relative z-10 max-w-5xl mx-auto reveal-fade">
       <div class="text-center mb-16">
         <span class="text-xs font-bold uppercase tracking-[0.25em] text-[#FFE082]">Programação & Local</span>
         <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-100 mt-2">Informações do Grande Dia</h2>
@@ -271,66 +271,64 @@
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Grid com 2 Cards Maiores e Mais Espaçosos -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
         <!-- Card 1: Cerimônia -->
-        <div class="glass-panel event-card">
-          <div class="event-card-icon">
-            <i data-lucide="church" class="w-7 h-7"></i>
+        <div class="glass-panel event-card p-8 sm:p-10 flex flex-col justify-between">
+          <div>
+            <div class="event-card-icon mx-auto mb-5">
+              <i data-lucide="church" class="w-8 h-8"></i>
+            </div>
+            <h3 class="font-serif text-2xl sm:text-3xl font-bold text-[#FFE082] mb-3">A Cerimônia</h3>
+            <p class="text-stone-200 text-sm font-medium mb-3 leading-relaxed">
+              R. Abaíra, 264 - Jardim IV Centenario, Guarulhos - SP, 07161-010
+            </p>
+            <div class="inline-block bg-[#1a0206] px-5 py-2.5 rounded-xl border border-[#D4AF37]/40 text-xs sm:text-sm font-semibold text-[#FFE082] mb-5 shadow-md">
+              Pontualmente às 12:00h
+            </div>
+            <p class="text-stone-300 text-xs sm:text-sm leading-relaxed mb-6">
+              Pedimos a gentileza de chegar com 20 minutos de antecedência para acomodação e início pontual da celebração.
+            </p>
           </div>
-          <h3 class="font-serif text-2xl font-bold text-[#FFE082] mb-2">A Cerimônia</h3>
-          <p class="text-stone-300 text-sm mb-4">Rua Abaíra, 264 - Lavras</p>
-          <div class="bg-[#1a0206] px-4 py-2 rounded-xl border border-[#D4AF37]/30 text-xs font-semibold text-[#FFE082] mb-4">
-            Pontualmente às 12:00h
+          <div class="flex flex-col sm:flex-row gap-3 w-full mt-4">
+            <button onclick="addToGoogleCalendar()" class="btn-outline-gold !text-xs !py-2.5 flex-1">
+              <i data-lucide="calendar-plus" class="w-4 h-4"></i> Salvar na Agenda
+            </button>
+            <button onclick="downloadIcsFile()" class="btn-outline-gold !text-xs !py-2.5 flex-1">
+              <i data-lucide="download" class="w-4 h-4"></i> Baixar Convite (.ICS)
+            </button>
           </div>
-          <p class="text-stone-400 text-xs leading-relaxed mb-6">
-            Pedimos a gentileza de chegar com 20 minutos de antecedência para acomodação dos convidados.
-          </p>
-          <button onclick="addToGoogleCalendar()" class="btn-outline-gold !text-xs !py-2 !px-4 mt-auto w-full">
-            <i data-lucide="calendar-plus" class="w-4 h-4"></i> Salvar na Agenda
-          </button>
         </div>
 
         <!-- Card 2: Recepção -->
-        <div class="glass-panel event-card">
-          <div class="event-card-icon">
-            <i data-lucide="party-popper" class="w-7 h-7"></i>
+        <div class="glass-panel event-card p-8 sm:p-10 flex flex-col justify-between">
+          <div>
+            <div class="event-card-icon mx-auto mb-5">
+              <i data-lucide="party-popper" class="w-8 h-8"></i>
+            </div>
+            <h3 class="font-serif text-2xl sm:text-3xl font-bold text-[#FFE082] mb-3">A Recepção</h3>
+            <p class="text-stone-200 text-sm font-medium mb-3 leading-relaxed">
+              R. Abaíra, 264 - Jardim IV Centenario, Guarulhos - SP, 07161-010
+            </p>
+            <div class="inline-block bg-[#1a0206] px-5 py-2.5 rounded-xl border border-[#D4AF37]/40 text-xs sm:text-sm font-semibold text-[#FFE082] mb-5 shadow-md">
+              Logo após a cerimônia
+            </div>
+            <p class="text-stone-300 text-xs sm:text-sm leading-relaxed mb-6">
+              Buffet completo, música ao vivo, drinks especiais e momentos inesquecíveis ao lado dos noivos para comemorar esta linda união.
+            </p>
           </div>
-          <h3 class="font-serif text-2xl font-bold text-[#FFE082] mb-2">A Recepção</h3>
-          <p class="text-stone-300 text-sm mb-4">Espaço de Festas Lavras</p>
-          <div class="bg-[#1a0206] px-4 py-2 rounded-xl border border-[#D4AF37]/30 text-xs font-semibold text-[#FFE082] mb-4">
-            Logo após a cerimônia
+          <div class="w-full mt-4">
+            <a href="https://maps.google.com/?q=R.+Aba%C3%ADra,+264+-+Jardim+IV+Centenario,+Guarulhos+-+SP,+07161-010" target="_blank" class="btn-gold !text-xs !py-3 w-full shadow-lg">
+              <i data-lucide="navigation" class="w-4 h-4"></i> Traçar Rota no Waze / Maps
+            </a>
           </div>
-          <p class="text-stone-400 text-xs leading-relaxed mb-6">
-            Buffet completo, música ao vivo, drinks especiais e momentos inesquecíveis ao lado dos noivos.
-          </p>
-          <a href="https://maps.google.com/?q=Rua+Abaira+264+Lavras+Guarulhos" target="_blank" class="btn-outline-gold !text-xs !py-2 !px-4 mt-auto w-full">
-            <i data-lucide="navigation" class="w-4 h-4"></i> Traçar Rota no Waze / Maps
-          </a>
-        </div>
-
-        <!-- Card 3: Dress Code -->
-        <div class="glass-panel event-card">
-          <div class="event-card-icon">
-            <i data-lucide="sparkles" class="w-7 h-7"></i>
-          </div>
-          <h3 class="font-serif text-2xl font-bold text-[#FFE082] mb-2">Dress Code</h3>
-          <p class="text-stone-300 text-sm mb-4">Traje Sugerido</p>
-          <div class="bg-[#1a0206] px-4 py-2 rounded-xl border border-[#D4AF37]/30 text-xs font-semibold text-[#FFE082] mb-4">
-            Passeio Completo / Esporte Fino
-          </div>
-          <p class="text-stone-400 text-xs leading-relaxed mb-6">
-            Sinta-se elegante e confortável para celebrar e dançar conosco a tarde toda (evitar branco/off-white).
-          </p>
-          <button onclick="downloadIcsFile()" class="btn-outline-gold !text-xs !py-2 !px-4 mt-auto w-full">
-            <i data-lucide="download" class="w-4 h-4"></i> Baixar Convite (.ICS)
-          </button>
         </div>
       </div>
 
       <!-- Google Maps Embed -->
-      <div class="glass-panel mt-12 p-3 overflow-hidden shadow-2xl">
+      <div class="glass-panel mt-12 p-3 overflow-hidden shadow-2xl max-w-4xl mx-auto">
         <iframe 
-          src="https://maps.google.com/maps?q=Rua%20Aba%C3%ADra%2C%20264%2C%20Lavras%2C%20Guarulhos%20-%20SP&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+          src="https://maps.google.com/maps?q=R.+Aba%C3%ADra%2C+264+-+Jardim+IV+Centenario%2C+Guarulhos+-+SP%2C+07161-010&t=&z=15&ie=UTF8&iwloc=&output=embed" 
           width="100%" 
           height="340" 
           style="border:0; border-radius: 1.1rem;" 
@@ -549,7 +547,7 @@
   <footer class="py-12 px-4 border-t border-[#3c0914] bg-[#120104]/80 text-center relative z-10">
     <div class="max-w-4xl mx-auto flex flex-col items-center">
       <span class="font-decorative text-2xl font-bold text-gold-gradient mb-2">Izabela & Ivan</span>
-      <p class="font-serif italic text-stone-400 text-sm mb-6">14.11.2026 — Lavras, Guarulhos - SP</p>
+      <p class="font-serif italic text-stone-400 text-sm mb-6">14.11.2026 — R. Abaíra, 264 - Jardim IV Centenario, Guarulhos - SP, 07161-010</p>
       
       <div class="flex items-center gap-6 text-xs text-stone-400 mb-6">
         <a href="#historia" class="hover:text-[#FFE082]">Nossa História</a>
