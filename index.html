@@ -314,21 +314,30 @@
             <i data-lucide="heart" class="gold-divider-icon fill-current"></i>
           </div>
 
-          <!-- Texto Narrativo Unificado -->
+          <!-- Texto Narrativo Unificado (Sem menção a música ao vivo) -->
           <p class="text-stone-200 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto mb-8 font-light">
-            Com a bênção de Deus e de nossas famílias, realizaremos a nossa bênção matrimonial pontualmente às <strong>12h</strong>, seguida da recepção festiva com um delicioso buffet, drinks especiais, música ao vivo e momentos inesquecíveis ao lado dos noivos para comemorar esta linda união.
+            Com a bênção de Deus e de nossas famílias, realizaremos a nossa bênção matrimonial pontualmente às <strong>12h</strong>, seguida da recepção festiva com um delicioso buffet, drinks especiais e momentos inesquecíveis ao lado dos noivos para comemorar esta linda união.
           </p>
 
-          <!-- Ações Integradas Unificadas -->
-          <div class="flex flex-wrap items-center justify-center gap-3.5 w-full max-w-2xl">
-            <button onclick="addToGoogleCalendar()" class="btn-outline-gold !text-xs !py-3 !px-5 flex-1 min-w-[200px]">
+          <!-- Ações Integradas Unificadas com Escolha de Rotas (Google Maps e Waze) -->
+          <div class="flex flex-wrap items-center justify-center gap-3 w-full max-w-3xl">
+            <button onclick="addToGoogleCalendar()" class="btn-outline-gold !text-xs !py-3 !px-4 flex-1 min-w-[170px]">
               <i data-lucide="calendar-plus" class="w-4 h-4"></i> Salvar na Agenda
             </button>
-            <button onclick="downloadIcsFile()" class="btn-outline-gold !text-xs !py-3 !px-5 flex-1 min-w-[200px]">
+            <button onclick="downloadIcsFile()" class="btn-outline-gold !text-xs !py-3 !px-4 flex-1 min-w-[170px]">
               <i data-lucide="download" class="w-4 h-4"></i> Baixar Convite (.ICS)
             </button>
-            <a href="https://maps.google.com/?q=R.+Aba%C3%ADra,+264+-+Jardim+IV+Centenario,+Guarulhos+-+SP,+07161-010" target="_blank" class="btn-gold !text-xs !py-3 !px-6 flex-1 min-w-[200px] shadow-xl">
-              <i data-lucide="navigation" class="w-4 h-4"></i> Traçar Rota no Waze / Maps
+            <a href="https://www.google.com/maps/dir/?api=1&destination=-23.398608,-46.4329713" target="_blank" rel="noopener noreferrer" class="btn-gold !text-xs !py-3 !px-4 flex-1 min-w-[170px] shadow-lg">
+              <svg class="w-4 h-4 text-[#220308]" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              </svg>
+              <span>Rota no Google Maps</span>
+            </a>
+            <a href="https://waze.com/ul?ll=-23.398608%2C-46.4329713&navigate=yes" target="_blank" rel="noopener noreferrer" class="btn-gold !text-xs !py-3 !px-4 flex-1 min-w-[170px] shadow-lg">
+              <svg class="w-4 h-4 text-[#220308]" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 3a9 9 0 0 0-9 9c0 3.3 1.8 6.2 4.5 7.7v1.8a1.5 1.5 0 0 0 2.2 1.3l2.8-1.5c.5.1 1 .2 1.5.2a9 9 0 0 0 9-9 9 9 0 0 0-9-9zm-2.5 7.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm-6.5 4.5c.8 1.5 2.3 2.5 4 2.5s3.2-1 4-2.5h-8z"/>
+              </svg>
+              <span>Rota no Waze</span>
             </a>
           </div>
         </div>
