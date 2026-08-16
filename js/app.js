@@ -49,15 +49,35 @@ function initPhoneIntro() {
       heroVideo.play().catch(() => {});
     }
 
-    // Iniciar áudio ambiente romântico ao entrar
+    // Iniciar áudio ambiente de forma robusta no mobile
     if (audio) {
-      audio.play().then(() => {
-        if (audioBtn) {
-          audioBtn.classList.add("playing");
-          audioBtn.innerHTML = '<i data-lucide="volume-2" class="w-5 h-5"></i>';
-          if (window.lucide) lucide.createIcons();
-        }
-      }).catch(() => {});
+      audio.muted = false;
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          if (audioBtn) {
+            audioBtn.classList.add("playing");
+            audioBtn.innerHTML = '<i data-lucide="volume-2" class="w-5 h-5"></i>';
+            if (window.lucide) lucide.createIcons();
+          }
+        }).catch(err => {
+          console.warn("Audio autoplay blocked by mobile policy:", err);
+          // Fallback: tocar no próximo toque na tela
+          const touchToPlay = () => {
+            audio.play().then(() => {
+              if (audioBtn) {
+                audioBtn.classList.add("playing");
+                audioBtn.innerHTML = '<i data-lucide="volume-2" class="w-5 h-5"></i>';
+                if (window.lucide) lucide.createIcons();
+              }
+            }).catch(() => {});
+            document.removeEventListener("touchstart", touchToPlay);
+            document.removeEventListener("click", touchToPlay);
+          };
+          document.addEventListener("touchstart", touchToPlay, { once: true });
+          document.addEventListener("click", touchToPlay, { once: true });
+        });
+      }
     }
 
     if (window.showToast) {
@@ -65,8 +85,14 @@ function initPhoneIntro() {
     }
   }
 
-  if (openBtn) openBtn.addEventListener("click", unlockInvite);
-  if (phoneMockup) phoneMockup.addEventListener("click", unlockInvite);
+  if (openBtn) {
+    openBtn.addEventListener("click", unlockInvite);
+    openBtn.addEventListener("touchend", unlockInvite);
+  }
+  if (phoneMockup) {
+    phoneMockup.addEventListener("click", unlockInvite);
+    phoneMockup.addEventListener("touchend", unlockInvite);
+  }
 }
 
 /* ==========================================================================
