@@ -561,6 +561,74 @@ body {
 }
 
 /* ==========================================================================
+   EVENT MASTER VENUE CARD (UNIFIED CEREMONY & RECEPTION WITH CHURCH BLEND)
+   ========================================================================== */
+.venue-master-card {
+  position: relative;
+  border-radius: 1.75rem;
+  overflow: hidden;
+  border: 1.5px solid rgba(212, 175, 55, 0.45);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), var(--gold-glow);
+  background: #140206;
+}
+
+.venue-master-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+  opacity: 0.28;
+  filter: saturate(1.2) contrast(1.1) brightness(0.85);
+  transform: scale(1.03);
+  transition: transform 12s ease;
+  z-index: 1;
+}
+
+.venue-master-card:hover .venue-master-bg {
+  transform: scale(1.08);
+}
+
+.venue-master-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(26, 3, 7, 0.94) 0%,
+    rgba(60, 9, 20, 0.88) 45%,
+    rgba(18, 1, 4, 0.96) 100%
+  );
+  z-index: 2;
+}
+
+.venue-master-content {
+  position: relative;
+  z-index: 3;
+}
+
+.venue-section-col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.25rem 2rem;
+  background: rgba(22, 2, 5, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 1.25rem;
+  transition: var(--transition-smooth);
+}
+
+.venue-section-col:hover {
+  border-color: rgba(212, 175, 55, 0.55);
+  background: rgba(34, 3, 8, 0.7);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.12);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
    PIX GIFT REGISTRY & MODAL
    ========================================================================== */
 .gift-card {
