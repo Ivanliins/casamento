@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel dos Noivos — Izabela & Ivan</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#220308" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom Luxury Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="bg-[#120104] text-stone-100 min-h-screen">
+
+  <div class="bg-glow-orb-1"></div>
+  <div class="bg-glow-orb-2"></div>
+
+  <!-- Header -->
+  <header class="border-b border-[#3c0914] bg-[#220308]/90 backdrop-blur-md px-6 py-4 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="font-decorative text-xl font-bold text-gold-gradient">
+          I & I
+        </a>
+        <span class="text-xs uppercase tracking-widest text-[#FFE082] border-l border-[#D4AF37]/30 pl-3 font-semibold">
+          Painel dos Noivos — Izabela & Ivan
+        </span>
+      </div>
+      <a href="index.html" class="btn-outline-gold !py-1.5 !px-3 !text-xs flex items-center gap-1.5">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar ao Site
+      </a>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       1. AUTHENTICATION LOCK SCREEN (PIN PROTEGIDO)
+       ========================================================================== -->
+  <section id="admin-auth-section" class="flex items-center justify-center min-h-[80vh] px-4">
+    <div class="glass-panel max-w-md w-full p-8 text-center shadow-2xl relative">
+      <div class="w-16 h-16 rounded-full bg-[#3c0914] border border-[#D4AF37] flex items-center justify-center mx-auto mb-4 text-[#FFE082] shadow-lg">
+        <i data-lucide="lock" class="w-8 h-8"></i>
+      </div>
+      <h2 class="font-serif text-2xl font-bold text-white mb-1">Acesso Restrito dos Noivos</h2>
+      <p class="text-xs text-stone-300 mb-6">Digite seu PIN de segurança para gerenciar a lista de convidados e confirmações.</p>
+
+      <div class="space-y-4">
+        <input 
+          type="password" 
+          id="admin-pin-input" 
+          maxlength="8" 
+          placeholder="Digite o PIN (ex: 2026)" 
+          class="form-control-luxury text-center text-xl tracking-widest !py-3 font-bold" 
+          autofocus 
+        />
+        <button id="admin-login-btn" class="btn-gold w-full !py-3 text-sm">
+          <i data-lucide="key-round" class="w-4 h-4"></i> Entrar no Painel
+        </button>
+      </div>
+      <p class="text-[11px] text-stone-400 mt-4">
+        💡 <em>PIN padrão de demonstração: <strong>2026</strong></em>
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ==========================================================================
+       2. DASHBOARD & KPIS (QUANDO AUTENTICADO)
+       ========================================================================== -->
+  <section id="admin-dashboard-section" class="hidden max-w-7xl mx-auto px-4 py-8 relative z-10">
+    
+    <!-- Top Welcome & Actions -->
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
+      <div>
+        <h1 class="font-serif text-3xl font-bold text-white">Gestão de Presença & Convidados</h1>
+        <p class="text-xs text-stone-300">Controle em tempo real de confirmações, acompanhantes e restrições alimentares.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button id="admin-export-csv-btn" class="btn-gold !text-xs !py-2.5 !px-4 shadow-xl">
+          <i data-lucide="download" class="w-4 h-4"></i> Exportar para Excel / CSV
+        </button>
+      </div>
+    </div>
+
+    <!-- KPIs Metric Cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+      <!-- Card 1: Confirmados -->
+      <div class="glass-panel p-5 border-l-4 border-l-emerald-500">
+        <div class="text-xs uppercase tracking-wider text-stone-300 font-semibold mb-1">Confirmados</div>
+        <div id="kpi-confirmed" class="font-serif text-3xl font-bold text-emerald-400">0</div>
+        <span class="text-[11px] text-stone-400">Respostas positivas</span>
+      </div>
+
+      <!-- Card 2: Total Pessoas (com acompanhantes) -->
+      <div class="glass-panel p-5 border-l-4 border-l-[#D4AF37]">
+        <div class="text-xs uppercase tracking-wider text-stone-300 font-semibold mb-1">Total de Pessoas</div>
+        <div id="kpi-total-guests" class="font-serif text-3xl font-bold text-[#FFE082]">0</div>
+        <span class="text-[11px] text-stone-400">Noivos + Acompanhantes</span>
+      </div>
+
+      <!-- Card 3: Recusados -->
+      <div class="glass-panel p-5 border-l-4 border-l-rose-500">
+        <div class="text-xs uppercase tracking-wider text-stone-300 font-semibold mb-1">Recusados</div>
+        <div id="kpi-declined" class="font-serif text-3xl font-bold text-rose-400">0</div>
+        <span class="text-[11px] text-stone-400">Não comparecerão</span>
+      </div>
+
+      <!-- Card 4: Restrições Alimentares -->
+      <div class="glass-panel p-5 border-l-4 border-l-amber-500">
+        <div class="text-xs uppercase tracking-wider text-stone-300 font-semibold mb-1">Dietas Especiais</div>
+        <div id="kpi-dietary" class="font-serif text-3xl font-bold text-amber-300">0</div>
+        <span class="text-[11px] text-stone-400">Alergias / Vegetarianos</span>
+      </div>
+
+      <!-- Card 5: Mensagens Carinhosas -->
+      <div class="glass-panel p-5 border-l-4 border-l-purple-500 col-span-2 lg:col-span-1">
+        <div class="text-xs uppercase tracking-wider text-stone-300 font-semibold mb-1">Recados Recebidos</div>
+        <div id="kpi-messages" class="font-serif text-3xl font-bold text-purple-300">0</div>
+        <span class="text-[11px] text-stone-400">Votos de felicidades</span>
+      </div>
+    </div>
+
+    <!-- Filters & Search Toolbar -->
+    <div class="glass-panel p-4 mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="relative w-full md:w-96">
+        <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400"></i>
+        <input 
+          type="text" 
+          id="admin-search-input" 
+          placeholder="Buscar por nome, WhatsApp ou mensagem..." 
+          class="form-control-luxury !pl-10 !py-2 !text-xs w-full" 
+        />
+      </div>
+
+      <div class="flex items-center gap-3 w-full md:w-auto">
+        <label for="admin-status-filter" class="text-xs text-stone-300 whitespace-nowrap font-medium">Status:</label>
+        <select id="admin-status-filter" class="form-control-luxury !py-2 !text-xs w-full md:w-44">
+          <option value="all">Todos os Registros</option>
+          <option value="yes">Apenas Confirmados</option>
+          <option value="no">Apenas Recusados</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Guests Table -->
+    <div class="glass-panel overflow-x-auto shadow-2xl">
+      <table class="w-full text-left border-collapse min-w-[700px]">
+        <thead>
+          <tr class="border-b border-[#3c0914] bg-[#2a040b] text-[11px] uppercase tracking-wider text-[#FFE082]">
+            <th class="px-4 py-3.5">Convidado(a)</th>
+            <th class="px-4 py-3.5">WhatsApp</th>
+            <th class="px-4 py-3.5">Status</th>
+            <th class="px-4 py-3.5 text-center">Total Pessoas</th>
+            <th class="px-4 py-3.5">Restrição Alimentar</th>
+            <th class="px-4 py-3.5">Recado dos Noivos</th>
+            <th class="px-4 py-3.5 text-right">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="admin-rsvps-tbody">
+          <!-- Dinâmico via JS -->
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+
+  <!-- Firebase Compat (Firestore SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <!-- Project Scripts -->
+  <script src="js/firebase-config.js"></script>
+  <script src="js/admin.js"></script>
+  
+  <script>
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

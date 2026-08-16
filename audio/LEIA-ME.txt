@@ -1,0 +1,6 @@
+# Pasta de Áudios do Casamento
+
+Coloque o seu arquivo de música MP3 nesta pasta com o nome:
+`until-i-found-you.mp3` ou `musica.mp3`
+
+O site automaticamente identificará e tocará essa música de fundo!

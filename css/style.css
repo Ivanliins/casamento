@@ -1,0 +1,846 @@
+/* ==========================================================================
+   DESIGN SYSTEM - CASAMENTO DE LUXO (MARSALA & LIQUID GOLD)
+   ========================================================================== */
+
+:root {
+  /* Marsala / Wine Color Palette */
+  --wine-950: #120104;
+  --wine-900: #220308;
+  --wine-800: #3c0914;
+  --wine-700: #4d0e1b;
+  --wine-600: #6b1426;
+  --wine-500: #881c33;
+  --wine-400: #a92a43;
+
+  /* Liquid Gold Metallic Gradient Stops */
+  --gold-lightest: #FFFDF0;
+  --gold-highlight: #FFF2B2;
+  --gold-100: #FFF6D6;
+  --gold-200: #FFE082;
+  --gold-300: #E6C65A;
+  --gold-400: #D4AF37;
+  --gold-500: #C59B27;
+  --gold-600: #AA771C;
+  --gold-700: #805510;
+  --gold-dark: #4A3205;
+
+  /* Gold Gradients */
+  --gold-gradient: linear-gradient(135deg, #FFF6D6 0%, #FFE082 25%, #D4AF37 50%, #AA771C 75%, #FFE082 100%);
+  --gold-gradient-soft: linear-gradient(135deg, #FFE082 0%, #D4AF37 50%, #805510 100%);
+  --gold-gradient-text: linear-gradient(135deg, #FFFDF0 0%, #FFE082 30%, #D4AF37 60%, #AA771C 100%);
+  --gold-glow: 0 0 25px rgba(212, 175, 55, 0.4), 0 0 50px rgba(212, 175, 55, 0.15);
+  --gold-glow-intense: 0 0 35px rgba(255, 224, 130, 0.6), 0 0 70px rgba(212, 175, 55, 0.3);
+
+  /* Background Gradients */
+  --bg-dark-radial: radial-gradient(circle at 50% 20%, #3c0914 0%, #220308 50%, #120104 100%);
+  --bg-glass: rgba(34, 3, 8, 0.65);
+  --bg-glass-card: rgba(60, 9, 20, 0.55);
+  --bg-glass-border: rgba(212, 175, 55, 0.35);
+
+  /* Typography */
+  --font-title-decorative: 'Cinzel Decorative', 'Playfair Display', serif;
+  --font-title-serif: 'Playfair Display', Georgia, serif;
+  --font-body: 'Montserrat', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Transitions */
+  --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-bounce: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ==========================================================================
+   BASE & RESET
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  background-color: var(--wine-950);
+  color: #F8F4EE;
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bg-dark-radial);
+  background-attachment: fixed;
+  color: #F8F4EE;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Luxury Background Glow Orbs */
+.bg-glow-orb-1 {
+  position: fixed;
+  top: -10vw;
+  left: -10vw;
+  width: 50vw;
+  height: 50vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(136, 28, 51, 0.3) 0%, rgba(34, 3, 8, 0) 70%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(60px);
+}
+
+.bg-glow-orb-2 {
+  position: fixed;
+  bottom: -15vw;
+  right: -10vw;
+  width: 60vw;
+  height: 60vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, rgba(34, 3, 8, 0) 70%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(80px);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--wine-950);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--gold-400), var(--wine-600));
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-200);
+}
+
+/* Selection */
+::selection {
+  background: var(--gold-400);
+  color: var(--wine-950);
+}
+
+/* ==========================================================================
+   TYPOGRAPHY & METALLIC SHINE
+   ========================================================================== */
+.font-decorative {
+  font-family: var(--font-title-decorative);
+}
+
+.font-serif {
+  font-family: var(--font-title-serif);
+}
+
+.font-sans {
+  font-family: var(--font-body);
+}
+
+.text-gold-gradient {
+  background: var(--gold-gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  background-size: 200% auto;
+  animation: shineGoldText 6s linear infinite;
+}
+
+@keyframes shineGoldText {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.gold-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin: 1.5rem auto;
+  width: 100%;
+  max-width: 320px;
+}
+
+.gold-divider::before,
+.gold-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-400), transparent);
+}
+
+.gold-divider-icon {
+  color: var(--gold-300);
+  font-size: 1.1rem;
+  filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.7));
+}
+
+/* ==========================================================================
+   LUXURY GLASSMORPHISM & BORDERS
+   ========================================================================== */
+.glass-panel {
+  background: var(--bg-glass-card);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--bg-glass-border);
+  border-radius: 1.5rem;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-smooth);
+}
+
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 246, 214, 0.08), transparent);
+  transform: skewX(-25deg);
+  pointer-events: none;
+  transition: 0.8s;
+}
+
+.glass-panel:hover::before {
+  left: 150%;
+}
+
+.glass-panel:hover {
+  border-color: rgba(212, 175, 55, 0.65);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5), 0 0 30px rgba(212, 175, 55, 0.2);
+  transform: translateY(-3px);
+}
+
+.gold-border-glow {
+  position: relative;
+}
+
+.gold-border-glow::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--gold-gradient);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.75;
+}
+
+/* ==========================================================================
+   BUTTONS (LIQUID GOLD & LUXURY OUTLINE)
+   ========================================================================== */
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  background: var(--gold-gradient);
+  color: var(--wine-950);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.95rem 2rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--gold-glow);
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-smooth);
+  text-decoration: none;
+  z-index: 1;
+}
+
+.btn-gold::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  transition: 0.6s ease;
+  z-index: -1;
+}
+
+.btn-gold:hover {
+  box-shadow: var(--gold-glow-intense);
+  transform: translateY(-2px) scale(1.02);
+  color: #0d0103;
+}
+
+.btn-gold:hover::before {
+  left: 100%;
+}
+
+.btn-gold:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.btn-outline-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  background: rgba(34, 3, 8, 0.4);
+  backdrop-filter: blur(10px);
+  color: var(--gold-100);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.85rem 1.75rem;
+  border-radius: 9999px;
+  border: 1px solid var(--gold-400);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  text-decoration: none;
+}
+
+.btn-outline-gold:hover {
+  background: var(--gold-gradient);
+  color: var(--wine-950);
+  border-color: transparent;
+  box-shadow: var(--gold-glow);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   NAVIGATION & FLOATING CONTROLS
+   ========================================================================== */
+.navbar-luxury {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1rem 1.5rem;
+  transition: var(--transition-smooth);
+}
+
+.navbar-luxury.scrolled {
+  background: rgba(18, 1, 4, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  padding: 0.75rem 1.5rem;
+}
+
+.floating-audio-btn {
+  position: fixed;
+  bottom: 1.75rem;
+  left: 1.75rem;
+  z-index: 90;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  background: rgba(34, 3, 8, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--gold-400);
+  color: var(--gold-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 15px rgba(212, 175, 55, 0.3);
+  transition: var(--transition-smooth);
+}
+
+.floating-audio-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
+  color: var(--gold-lightest);
+}
+
+.floating-audio-btn.playing {
+  animation: pulseGold 2s infinite;
+}
+
+@keyframes pulseGold {
+  0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.6); }
+  70% { box-shadow: 0 0 0 14px rgba(212, 175, 55, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+}
+
+.floating-rsvp-cta {
+  position: fixed;
+  bottom: 1.75rem;
+  right: 1.75rem;
+  z-index: 90;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), var(--gold-glow);
+}
+
+/* ==========================================================================
+   HERO SECTION & VIDEO BACKGROUND
+   ========================================================================== */
+.hero-section {
+  position: relative;
+  isolation: isolate;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6rem 1.5rem 4rem;
+  overflow: hidden;
+}
+
+.hero-video-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  filter: brightness(0.6) contrast(1.1);
+  pointer-events: none;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(60, 9, 20, 0.65) 0%, rgba(18, 1, 4, 0.9) 90%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Countdown Card */
+.countdown-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.85rem;
+  max-width: 520px;
+  margin: 2.25rem auto 0;
+}
+
+.countdown-box {
+  background: rgba(34, 3, 8, 0.65);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 1rem;
+  padding: 1rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  position: relative;
+}
+
+.countdown-number {
+  font-family: var(--font-title-serif);
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.countdown-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #D6C2A5;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   STORYTELLING & VIDEO PLAYER
+   ========================================================================== */
+.luxury-video-frame {
+  position: relative;
+  border-radius: 1.5rem;
+  padding: 8px;
+  background: var(--gold-gradient);
+  box-shadow: var(--gold-glow);
+}
+
+.luxury-video-inner {
+  border-radius: 1.1rem;
+  overflow: hidden;
+  background: #000;
+  aspect-ratio: 16 / 9;
+  position: relative;
+}
+
+.luxury-video-inner iframe,
+.luxury-video-inner video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+}
+
+/* ==========================================================================
+   EVENT CARDS & LOGISTICS
+   ========================================================================== */
+.event-card {
+  padding: 2.25rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+}
+
+.event-card-icon {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background: rgba(60, 9, 20, 0.8);
+  border: 1px solid var(--gold-400);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  color: var(--gold-200);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);
+  font-size: 1.5rem;
+}
+
+/* ==========================================================================
+   PIX GIFT REGISTRY & MODAL
+   ========================================================================== */
+.gift-card {
+  transition: var(--transition-smooth);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.gift-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--gold-300);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), var(--gold-glow);
+}
+
+.gift-img-wrapper {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  border-radius: 1rem 1rem 0 0;
+  overflow: hidden;
+}
+
+.gift-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.gift-card:hover .gift-img-wrapper img {
+  transform: scale(1.08);
+}
+
+/* Luxury Modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 1, 3, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.35s ease;
+}
+
+.modal-backdrop.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content-luxury {
+  width: 100%;
+  max-width: 500px;
+  background: var(--bg-glass-card);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--gold-400);
+  border-radius: 1.75rem;
+  padding: 2.25rem;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), var(--gold-glow);
+  transform: scale(0.92) translateY(20px);
+  transition: var(--transition-bounce);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-backdrop.active .modal-content-luxury {
+  transform: scale(1) translateY(0);
+}
+
+/* QR Code Container */
+.qr-code-box {
+  background: #ffffff;
+  padding: 1.25rem;
+  border-radius: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  margin: 1.25rem auto;
+}
+
+.qr-code-box canvas,
+.qr-code-box img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ==========================================================================
+   RSVP FORM
+   ========================================================================== */
+.form-control-luxury {
+  width: 100%;
+  background: rgba(34, 3, 8, 0.75);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 0.85rem;
+  padding: 0.95rem 1.25rem;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+.form-control-luxury:focus {
+  border-color: var(--gold-300);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.35);
+  background: rgba(45, 5, 12, 0.9);
+}
+
+.form-control-luxury::placeholder {
+  color: rgba(214, 194, 165, 0.5);
+}
+
+.radio-group-luxury {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.radio-card-luxury {
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: rgba(34, 3, 8, 0.6);
+  border-radius: 0.85rem;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.radio-card-luxury input[type="radio"] {
+  display: none;
+}
+
+.radio-card-luxury.active {
+  background: linear-gradient(135deg, rgba(136, 28, 51, 0.8), rgba(60, 9, 20, 0.9));
+  border-color: var(--gold-300);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+}
+
+/* ==========================================================================
+   TOAST NOTIFICATION
+   ========================================================================== */
+.toast-luxury {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 300;
+  background: rgba(34, 3, 8, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--gold-400);
+  border-radius: 1rem;
+  padding: 1rem 1.5rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), var(--gold-glow);
+  transform: translateY(-100px);
+  opacity: 0;
+  transition: var(--transition-bounce);
+}
+
+.toast-luxury.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ==========================================================================
+   ANIMATIONS & REVEAL
+   ========================================================================== */
+.reveal-fade {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-fade.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   SMARTPHONE PICKUP INTRO & LOADING SIMULATOR
+   ========================================================================== */
+#phone-intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: radial-gradient(circle at center, #3c0914 0%, #1a0206 60%, #0d0103 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  overflow: hidden;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s ease;
+}
+
+#phone-intro-overlay.unlocked {
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.1);
+  pointer-events: none;
+}
+
+.phone-pickup-container {
+  position: relative;
+  width: 100%;
+  max-width: 330px;
+  height: 600px;
+  max-height: 82vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: phoneFloatPickup 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes phoneFloatPickup {
+  0% {
+    transform: translateY(12px) rotate(-1deg);
+  }
+  100% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+/* Smartphone Frame */
+.phone-mockup-frame {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  border-radius: 44px;
+  border: 3.5px solid #D4AF37;
+  box-shadow: 0 0 35px rgba(212, 175, 55, 0.4), 0 30px 80px rgba(0, 0, 0, 0.95), inset 0 0 10px rgba(255, 224, 130, 0.3);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Dynamic Island / Speaker Notch */
+.phone-notch {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 22px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 30;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+}
+
+.phone-camera-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #111;
+  border: 1px solid #333;
+}
+
+/* Video inside phone */
+.phone-screen-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+}
+
+/* Overlay inside phone */
+.phone-screen-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(34, 3, 8, 0.4) 0%, rgba(18, 1, 4, 0.1) 40%, rgba(18, 1, 4, 0.85) 100%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.5rem 1.25rem 1.5rem;
+  text-align: center;
+}
+
+/* Glowing hand simulation backdrop */
+.hand-silhouette-glow {
+  position: absolute;
+  bottom: -40px;
+  width: 120%;
+  height: 160px;
+  background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.25) 0%, rgba(60, 9, 20, 0) 70%);
+  z-index: 5;
+  pointer-events: none;
+  filter: blur(25px);
+}
+
+.phone-open-cta-pulse {
+  animation: buttonShinePulse 2s infinite ease-in-out;
+}
+
+@keyframes buttonShinePulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 0 30px rgba(255, 224, 130, 0.8);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+  }
+}
+

@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Izabela & Ivan — Casamento & Confirmação de Presença</title>
+  <meta name="description" content="Celebre o amor de Izabela & Ivan. Confirme sua presença (RSVP), confira a lista de presentes e detalhes do evento." />
+  
+  <!-- Favicon & Theme Color -->
+  <meta name="theme-color" content="#220308" />
+
+  <!-- Google Fonts: Cinzel Decorative, Playfair Display & Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN (v3) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- QRCode.js CDN for EMV BR Code rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- Custom Luxury Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="relative min-h-screen text-stone-100 selection:bg-[#D4AF37] selection:text-[#220308]">
+
+  <!-- ==========================================================================
+       0. SMARTPHONE PICKUP & VIDEO INTRO LOADING SIMULATOR
+       ========================================================================== -->
+  <div id="phone-intro-overlay">
+    <div class="text-center mb-4">
+      <span class="text-[11px] font-bold uppercase tracking-[0.28em] text-[#FFE082] block animate-pulse">
+        ✦ Você recebeu um convite especial ✦
+      </span>
+      <h2 class="font-decorative text-2xl sm:text-3xl font-bold text-gold-gradient mt-1">
+        Izabela & Ivan
+      </h2>
+    </div>
+
+    <!-- Phone Pickup Container -->
+    <div class="phone-pickup-container">
+      <div class="phone-mockup-frame cursor-pointer group">
+        
+        <!-- Dynamic Island / Top Notch -->
+        <div class="phone-notch">
+          <div class="phone-camera-dot"></div>
+        </div>
+
+        <!-- Video playing inside the smartphone screen -->
+        <video 
+          id="phone-intro-video"
+          class="phone-screen-video" 
+          autoplay 
+          muted 
+          loop 
+          playsinline 
+          poster="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop">
+          <source src="video/casamento.mp4" type="video/mp4" />
+        </video>
+
+        <!-- Smartphone Overlay Content -->
+        <div class="phone-screen-overlay">
+          <div>
+            <span class="text-[10px] uppercase font-bold tracking-widest text-[#FFE082] bg-[#220308]/70 px-2.5 py-1 rounded-full border border-[#D4AF37]/30">
+              14.11.2026 • 14:00h
+            </span>
+          </div>
+
+          <div class="space-y-3">
+            <h3 class="font-serif text-xl font-bold text-white drop-shadow-md">
+              Nosso Grande Dia
+            </h3>
+            <p class="text-[11px] text-stone-200 line-clamp-2 drop-shadow">
+              Toque na tela ou no botão para abrir o convite oficial e celebrar conosco.
+            </p>
+            <button id="phone-open-invite-btn" class="btn-gold phone-open-cta-pulse !py-2.5 !px-5 !text-xs w-full shadow-2xl">
+              <i data-lucide="sparkles" class="w-4 h-4"></i> Abrir Convite Oficial
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Glowing simulated hand reflection -->
+      <div class="hand-silhouette-glow"></div>
+    </div>
+
+    <p class="text-[11px] text-stone-400 mt-4 tracking-wide">
+      Toque no celular para começar a experiência ✨
+    </p>
+  </div>
+
+
+  <!-- Ambient Glow Elements -->
+  <div class="bg-glow-orb-1"></div>
+  <div class="bg-glow-orb-2"></div>
+
+  <!-- Background Ambient Audio (Stephen Sanchez - Until I Found You) -->
+  <audio id="wedding-ambient-audio" loop preload="auto">
+    <source src="audio/until-i-found-you.mp3" type="audio/mpeg" />
+    <source src="audio/musica.mp3" type="audio/mpeg" />
+    <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- Floating Audio Button -->
+  <button id="audio-toggle-btn" class="floating-audio-btn" title="Ligar/Desligar Música Ambiente" aria-label="Música Ambiente">
+    <i data-lucide="music" class="w-5 h-5"></i>
+  </button>
+
+  <!-- Floating Mobile RSVP CTA -->
+  <div class="md:hidden floating-rsvp-cta">
+    <a href="#rsvp-section" class="btn-gold !py-2.5 !px-5 !text-xs shadow-2xl flex items-center gap-1.5">
+      <i data-lucide="calendar-check" class="w-4 h-4"></i> Confirmar Presença
+    </a>
+  </div>
+
+  <!-- ==========================================================================
+       NAVIGATION BAR
+       ========================================================================== -->
+  <header class="navbar-luxury flex items-center justify-between">
+    <a href="#" class="font-decorative text-xl md:text-2xl font-bold tracking-wider text-gold-gradient">
+      I & I
+    </a>
+    <nav class="hidden md:flex items-center gap-8 text-sm font-medium tracking-wide uppercase text-stone-200">
+      <a href="#historia" class="hover:text-[#FFE082] transition-colors">Nossa História</a>
+      <a href="#evento" class="hover:text-[#FFE082] transition-colors">O Evento</a>
+      <a href="#presentes" class="hover:text-[#FFE082] transition-colors">Presentes</a>
+      <a href="#rsvp-section" class="hover:text-[#FFE082] transition-colors">Confirmar Presença</a>
+    </nav>
+    <div class="flex items-center gap-3">
+      <a href="#rsvp-section" class="hidden sm:inline-flex btn-outline-gold !py-2 !px-4 !text-xs">
+        RSVP Online
+      </a>
+      <a href="admin.html" class="p-2 rounded-full text-stone-400 hover:text-[#FFE082] transition-colors" title="Acesso dos Noivos (Admin)">
+        <i data-lucide="lock" class="w-4 h-4"></i>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================================================
+         1. HERO SECTION & COUNTDOWN
+         ========================================================================== -->
+    <section class="hero-section">
+      <!-- Luxury Video Background -->
+      <video class="hero-video-bg" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1920&auto=format&fit=crop">
+        <source src="video/casamento.mp4" type="video/mp4" />
+      </video>
+      <div class="hero-overlay"></div>
+
+      <div class="relative z-10 max-w-4xl mx-auto px-4 py-8 flex flex-col items-center">
+        <span class="inline-block text-xs md:text-sm font-semibold tracking-[0.3em] uppercase text-[#FFE082] mb-3">
+          Com a bênção de Deus e de nossos pais
+        </span>
+
+        <h1 class="font-decorative text-4xl sm:text-6xl md:text-7xl font-bold tracking-wider leading-tight text-gold-gradient mb-2 text-center drop-shadow-2xl">
+          Izabela & Ivan
+        </h1>
+
+        <div class="gold-divider">
+          <i data-lucide="heart" class="gold-divider-icon fill-current"></i>
+        </div>
+
+        <!-- Nova Frase Marcante do Casal -->
+        <p class="font-serif italic text-lg sm:text-2xl text-stone-200 mb-8 max-w-2xl text-center">
+          "Dois corações que se unem sob a mesma promessa. Que o amor seja a nossa melhor escolha em cada novo amanhecer."
+        </p>
+
+        <!-- Wedding Date & Venue Highlights -->
+        <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-sm sm:text-base font-medium text-stone-300 mb-8">
+          <div class="flex items-center gap-2">
+            <i data-lucide="calendar" class="w-4 h-4 text-[#FFE082]"></i>
+            <span>14 de Novembro de 2026</span>
+          </div>
+          <div class="hidden sm:block w-1.5 h-1.5 rounded-full bg-[#D4AF37]"></div>
+          <div class="flex items-center gap-2">
+            <i data-lucide="clock" class="w-4 h-4 text-[#FFE082]"></i>
+            <span>14:00 Horas</span>
+          </div>
+          <div class="hidden sm:block w-1.5 h-1.5 rounded-full bg-[#D4AF37]"></div>
+          <div class="flex items-center gap-2">
+            <i data-lucide="map-pin" class="w-4 h-4 text-[#FFE082]"></i>
+            <span>Rua Abaíra, 264 — Lavras</span>
+          </div>
+        </div>
+
+        <!-- Dynamic Gold Countdown -->
+        <div class="countdown-container w-full">
+          <div class="countdown-box">
+            <span id="cd-days" class="countdown-number">00</span>
+            <span class="countdown-label">Dias</span>
+          </div>
+          <div class="countdown-box">
+            <span id="cd-hours" class="countdown-number">00</span>
+            <span class="countdown-label">Horas</span>
+          </div>
+          <div class="countdown-box">
+            <span id="cd-minutes" class="countdown-number">00</span>
+            <span class="countdown-label">Minutos</span>
+          </div>
+          <div class="countdown-box">
+            <span id="cd-seconds" class="countdown-number">00</span>
+            <span class="countdown-label">Segundos</span>
+          </div>
+        </div>
+
+        <!-- Main CTA -->
+        <div class="mt-10 flex flex-col sm:flex-row items-center gap-4">
+          <a href="#rsvp-section" class="btn-gold w-full sm:w-auto">
+            <i data-lucide="check-circle" class="w-5 h-5"></i> Confirmar Minha Presença
+          </a>
+          <a href="#presentes" class="btn-outline-gold w-full sm:w-auto">
+            <i data-lucide="gift" class="w-5 h-5"></i> Lista de Presentes
+          </a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==========================================================================
+         2. STORYTELLING & VIDEO PLAYER
+         ========================================================================== -->
+    <section id="historia" class="py-24 px-4 relative z-10 max-w-5xl mx-auto reveal-fade">
+      <div class="text-center mb-12">
+        <span class="text-xs font-bold uppercase tracking-[0.25em] text-[#FFE082]">Filme Pré-Wedding</span>
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-100 mt-2">Nossa História</h2>
+        <div class="gold-divider">
+          <i data-lucide="film" class="gold-divider-icon"></i>
+        </div>
+        <p class="text-stone-300 max-w-2xl mx-auto text-sm sm:text-base">
+          Cada detalhe do nosso encontro nos trouxe até este momento mágico. Prepare o coração para celebrar conosco este novo capítulo de Izabela & Ivan.
+        </p>
+      </div>
+
+      <!-- Luxury Gold Framed Video Player -->
+      <div class="luxury-video-frame max-w-4xl mx-auto shadow-2xl">
+        <div class="luxury-video-inner">
+          <video 
+            controls 
+            playsinline 
+            preload="metadata"
+            class="w-full h-full object-cover"
+            poster="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1920&auto=format&fit=crop">
+            <source src="video/casamento.mp4" type="video/mp4" />
+            Seu navegador não suporta a tag de vídeo.
+          </video>
+        </div>
+      </div>
+
+      <!-- Moments Timeline Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
+        <div class="glass-panel p-6 text-center">
+          <div class="text-3xl mb-3">☕</div>
+          <h3 class="font-serif text-lg font-bold text-[#FFE082] mb-2">O Primeiro Olhar</h3>
+          <p class="text-stone-300 text-sm">O instante em que nossos caminhos se cruzaram e a certeza de que algo extraordinário começava ali.</p>
+        </div>
+        <div class="glass-panel p-6 text-center">
+          <div class="text-3xl mb-3">💍</div>
+          <h3 class="font-serif text-lg font-bold text-[#FFE082] mb-2">O Pedido Especial</h3>
+          <p class="text-stone-300 text-sm">Um sim repleto de sorrisos e lágrimas de alegria que selou o início da nossa jornada rumo ao altar.</p>
+        </div>
+        <div class="glass-panel p-6 text-center">
+          <div class="text-3xl mb-3">✨</div>
+          <h3 class="font-serif text-lg font-bold text-[#FFE082] mb-2">A Celebração</h3>
+          <p class="text-stone-300 text-sm">Estar cercado por quem amamos no dia 14 de Novembro para eternizar essa linda união.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==========================================================================
+         3. EVENT DETAILS & LOGISTICS
+         ========================================================================== -->
+    <section id="evento" class="py-24 px-4 relative z-10 max-w-6xl mx-auto reveal-fade">
+      <div class="text-center mb-16">
+        <span class="text-xs font-bold uppercase tracking-[0.25em] text-[#FFE082]">Programação & Local</span>
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-100 mt-2">Informações do Grande Dia</h2>
+        <div class="gold-divider">
+          <i data-lucide="map" class="gold-divider-icon"></i>
+        </div>
+        <p class="text-stone-300 max-w-xl mx-auto text-sm sm:text-base">
+          Tudo o que você precisa saber para desfrutar cada instante do casamento de Izabela & Ivan.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Card 1: Cerimônia -->
+        <div class="glass-panel event-card">
+          <div class="event-card-icon">
+            <i data-lucide="church" class="w-7 h-7"></i>
+          </div>
+          <h3 class="font-serif text-2xl font-bold text-[#FFE082] mb-2">A Cerimônia</h3>
+          <p class="text-stone-300 text-sm mb-4">Rua Abaíra, 264 - Lavras</p>
+          <div class="bg-[#1a0206] px-4 py-2 rounded-xl border border-[#D4AF37]/30 text-xs font-semibold text-[#FFE082] mb-4">
+            Pontualmente às 14:00h
+          </div>
+          <p class="text-stone-400 text-xs leading-relaxed mb-6">
+            Pedimos a gentileza de chegar com 20 minutos de antecedência para acomodação dos convidados.
+          </p>
+          <button onclick="addToGoogleCalendar()" class="btn-outline-gold !text-xs !py-2 !px-4 mt-auto w-full">
+            <i data-lucide="calendar-plus" class="w-4 h-4"></i> Salvar na Agenda
+          </button>
+        </div>
+
+        <!-- Card 2: Recepção -->
+        <div class="glass-panel event-card">
+          <div class="event-card-icon">
+            <i data-lucide="party-popper" class="w-7 h-7"></i>
+          </div>
+          <h3 class="font-serif text-2xl font-bold text-[#FFE082] mb-2">A Recepção</h3>
+          <p class="text-stone-300 text-sm mb-4">Espaço de Festas Lavras</p>
+          <div class="bg-[#1a0206] px-4 py-2 rounded-xl border border-[#D4AF37]/30 text-xs font-semibold text-[#FFE082] mb-4">
+            Logo após a cerimônia
+          </div>
+          <p class="text-stone-400 text-xs leading-relaxed mb-6">
+            Buffet completo, música ao vivo, drinks especiais e momentos inesquecíveis ao lado dos noivos.
+          </p>
+          <a href="https://maps.google.com/?q=Rua+Abaira+264+Lavras+Guarulhos" target="_blank" class="btn-outline-gold !text-xs !py-2 !px-4 mt-auto w-full">
+            <i data-lucide="navigation" class="w-4 h-4"></i> Traçar Rota no Waze / Maps
+          </a>
+        </div>
+
+        <!-- Card 3: Dress Code -->
+        <div class="glass-panel event-card">
+          <div class="event-card-icon">
+            <i data-lucide="sparkles" class="w-7 h-7"></i>
+          </div>
+          <h3 class="font-serif text-2xl font-bold text-[#FFE082] mb-2">Dress Code</h3>
+          <p class="text-stone-300 text-sm mb-4">Traje Sugerido</p>
+          <div class="bg-[#1a0206] px-4 py-2 rounded-xl border border-[#D4AF37]/30 text-xs font-semibold text-[#FFE082] mb-4">
+            Passeio Completo / Esporte Fino
+          </div>
+          <p class="text-stone-400 text-xs leading-relaxed mb-6">
+            Sinta-se elegante e confortável para celebrar e dançar conosco a tarde toda (evitar branco/off-white).
+          </p>
+          <button onclick="downloadIcsFile()" class="btn-outline-gold !text-xs !py-2 !px-4 mt-auto w-full">
+            <i data-lucide="download" class="w-4 h-4"></i> Baixar Convite (.ICS)
+          </button>
+        </div>
+      </div>
+
+      <!-- Google Maps Embed -->
+      <div class="glass-panel mt-12 p-3 overflow-hidden shadow-2xl">
+        <iframe 
+          src="https://maps.google.com/maps?q=Rua%20Aba%C3%ADra%2C%20264%2C%20Lavras%2C%20Guarulhos%20-%20SP&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+          width="100%" 
+          height="340" 
+          style="border:0; border-radius: 1.1rem;" 
+          allowfullscreen="" 
+          loading="lazy" 
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </section>
+
+
+    <!-- ==========================================================================
+         4. PIX GIFT REGISTRY WITH DYNAMIC QR CODE MODAL
+         ========================================================================== -->
+    <section id="presentes" class="py-24 px-4 relative z-10 max-w-6xl mx-auto reveal-fade">
+      <div class="text-center mb-16">
+        <span class="text-xs font-bold uppercase tracking-[0.25em] text-[#FFE082]">Mimos & Lua de Mel</span>
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-100 mt-2">Lista de Presentes</h2>
+        <div class="gold-divider">
+          <i data-lucide="gift" class="gold-divider-icon"></i>
+        </div>
+        <p class="text-stone-300 max-w-xl mx-auto text-sm sm:text-base">
+          Sua presença é o maior presente! Caso deseje nos presentear com uma cota para nossa Lua de Mel, criamos opções práticas via Pix.
+        </p>
+      </div>
+
+      <!-- Gift Showcase Cards Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Item 1 -->
+        <div class="glass-panel gift-card">
+          <div class="gift-img-wrapper">
+            <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=600&auto=format&fit=crop" alt="Jantar Romântico" />
+          </div>
+          <div class="p-5 flex flex-col flex-1 justify-between">
+            <div>
+              <h3 class="font-serif font-bold text-lg text-white mb-1">Jantar a Dois</h3>
+              <p class="text-xs text-stone-300 mb-3">Brinde especial dos noivos na primeira noite de casados.</p>
+              <div class="font-serif font-bold text-xl text-[#FFE082] mb-4">R$ 150,00</div>
+            </div>
+            <button onclick="openPixModal('Jantar a Dois dos Noivos', 150)" class="btn-gold !w-full !py-2.5 !text-xs">
+              <i data-lucide="gift" class="w-4 h-4"></i> Presentear
+            </button>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="glass-panel gift-card">
+          <div class="gift-img-wrapper">
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=600&auto=format&fit=crop" alt="Passeio na Praia" />
+          </div>
+          <div class="p-5 flex flex-col flex-1 justify-between">
+            <div>
+              <h3 class="font-serif font-bold text-lg text-white mb-1">Passeio Romântico</h3>
+              <p class="text-xs text-stone-300 mb-3">Tour inesquecível pelas mais belas paisagens da viagem.</p>
+              <div class="font-serif font-bold text-xl text-[#FFE082] mb-4">R$ 250,00</div>
+            </div>
+            <button onclick="openPixModal('Passeio Romântico da Lua de Mel', 250)" class="btn-gold !w-full !py-2.5 !text-xs">
+              <i data-lucide="gift" class="w-4 h-4"></i> Presentear
+            </button>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="glass-panel gift-card">
+          <div class="gift-img-wrapper">
+            <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=600&auto=format&fit=crop" alt="Dia de Spa Relaxante" />
+          </div>
+          <div class="p-5 flex flex-col flex-1 justify-between">
+            <div>
+              <h3 class="font-serif font-bold text-lg text-white mb-1">Spa dos Noivos</h3>
+              <p class="text-xs text-stone-300 mb-3">Massagem relaxante a dois para recarregar as energias.</p>
+              <div class="font-serif font-bold text-xl text-[#FFE082] mb-4">R$ 380,00</div>
+            </div>
+            <button onclick="openPixModal('Spa Relaxante dos Noivos', 380)" class="btn-gold !w-full !py-2.5 !text-xs">
+              <i data-lucide="gift" class="w-4 h-4"></i> Presentear
+            </button>
+          </div>
+        </div>
+
+        <!-- Item 4 (Valor Livre) -->
+        <div class="glass-panel gift-card border-dashed border-[#D4AF37]">
+          <div class="gift-img-wrapper">
+            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=600&auto=format&fit=crop" alt="Cota Livre de Amor" />
+          </div>
+          <div class="p-5 flex flex-col flex-1 justify-between">
+            <div>
+              <h3 class="font-serif font-bold text-lg text-white mb-1">Cota Livre de Amor</h3>
+              <p class="text-xs text-stone-300 mb-3">Fique à vontade para presentear com o valor que seu coração mandar.</p>
+              <div class="font-serif font-bold text-xl text-[#FFE082] mb-4">Valor à Escolha</div>
+            </div>
+            <button onclick="openPixModal('Cota Livre de Amor', 0)" class="btn-gold !w-full !py-2.5 !text-xs">
+              <i data-lucide="heart-handshake" class="w-4 h-4"></i> Escolher Valor
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==========================================================================
+         5. RSVP SYSTEM (CONFIRMAÇÃO DE PRESENÇA DUPLA)
+         ========================================================================== -->
+    <section id="rsvp-section" class="py-24 px-4 relative z-10 max-w-3xl mx-auto reveal-fade">
+      <div class="text-center mb-12">
+        <span class="text-xs font-bold uppercase tracking-[0.25em] text-[#FFE082]">Sua Presença é Essencial</span>
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-100 mt-2">Confirmação de Presença (RSVP)</h2>
+        <div class="gold-divider">
+          <i data-lucide="mail-check" class="gold-divider-icon"></i>
+        </div>
+        <p class="text-stone-300 max-w-lg mx-auto text-sm">
+          Por favor, confirme sua presença até o dia <strong>01 de Novembro de 2026</strong> para que possamos organizar tudo com muito carinho para você.
+        </p>
+      </div>
+
+      <!-- Luxury Form Card -->
+      <div class="glass-panel p-6 sm:p-10 shadow-2xl">
+        <form id="rsvp-form" class="space-y-6">
+
+          <!-- Presença Radio Toggle -->
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-[#FFE082] mb-2.5">
+              Você comparecerá ao casamento? *
+            </label>
+            <div class="radio-group-luxury">
+              <div id="card-attending-yes" class="radio-card-luxury active">
+                <input type="radio" id="radio-attending-yes" name="attending" value="yes" checked />
+                <div class="flex items-center justify-center gap-2 font-semibold text-sm">
+                  <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i> Sim, com certeza!
+                </div>
+              </div>
+              <div id="card-attending-no" class="radio-card-luxury">
+                <input type="radio" id="radio-attending-no" name="attending" value="no" />
+                <div class="flex items-center justify-center gap-2 font-semibold text-sm text-stone-300">
+                  <i data-lucide="x-circle" class="w-4 h-4 text-rose-400"></i> Não poderei ir
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Nome Completo -->
+          <div>
+            <label for="rsvp-name" class="block text-xs font-semibold uppercase tracking-wider text-stone-300 mb-2">
+              Seu Nome Completo *
+            </label>
+            <input type="text" id="rsvp-name" required placeholder="Ex: Lucas Ferreira" class="form-control-luxury" />
+          </div>
+
+          <!-- Telefone / WhatsApp -->
+          <div>
+            <label for="rsvp-phone" class="block text-xs font-semibold uppercase tracking-wider text-stone-300 mb-2">
+              WhatsApp / Celular com DDD *
+            </label>
+            <input type="tel" id="rsvp-phone" required placeholder="(11) 99999-9999" class="form-control-luxury" />
+          </div>
+
+          <!-- Detalhes Condicionais para quem Confirmou -->
+          <div id="guests-details-wrapper" class="space-y-6">
+            <!-- Quantidade de Pessoas -->
+            <div>
+              <label for="rsvp-guests-count" class="block text-xs font-semibold uppercase tracking-wider text-stone-300 mb-2">
+                Total de Pessoas (Você + Acompanhantes)
+              </label>
+              <select id="rsvp-guests-count" class="form-control-luxury">
+                <option value="1">Apenas eu (1 pessoa)</option>
+                <option value="2">2 pessoas</option>
+                <option value="3">3 pessoas</option>
+                <option value="4">4 pessoas</option>
+                <option value="5">5 pessoas</option>
+              </select>
+            </div>
+
+            <!-- Nome dos Acompanhantes -->
+            <div>
+              <label for="rsvp-guests-names" class="block text-xs font-semibold uppercase tracking-wider text-stone-300 mb-2">
+                Nome Completo dos Acompanhantes
+              </label>
+              <input type="text" id="rsvp-guests-names" placeholder="Ex: Camila Ferreira e Sophia Ferreira" class="form-control-luxury" />
+            </div>
+
+            <!-- Restrição Alimentar -->
+            <div>
+              <label for="rsvp-dietary" class="block text-xs font-semibold uppercase tracking-wider text-stone-300 mb-2">
+                Possui alguma restrição alimentar ou alergia?
+              </label>
+              <input type="text" id="rsvp-dietary" placeholder="Ex: Vegetariano, Vegano, Sem glúten, Intolerante a lactose..." class="form-control-luxury" />
+            </div>
+          </div>
+
+          <!-- Recado Especial -->
+          <div>
+            <label for="rsvp-message" class="block text-xs font-semibold uppercase tracking-wider text-stone-300 mb-2">
+              Deixe um recado carinhoso para Izabela & Ivan 💕
+            </label>
+            <textarea id="rsvp-message" rows="3" placeholder="Escreva uma mensagem especial aos noivos..." class="form-control-luxury"></textarea>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" id="rsvp-submit-btn" class="btn-gold w-full !py-3.5 text-base">
+            <i data-lucide="send" class="w-5 h-5"></i> Enviar Confirmação & Abrir WhatsApp
+          </button>
+          
+          <p class="text-center text-xs text-stone-400">
+            🔒 Seus dados serão gravados com segurança e você será direcionado ao WhatsApp com o comprovante.
+          </p>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="py-12 px-4 border-t border-[#3c0914] bg-[#120104]/80 text-center relative z-10">
+    <div class="max-w-4xl mx-auto flex flex-col items-center">
+      <span class="font-decorative text-2xl font-bold text-gold-gradient mb-2">Izabela & Ivan</span>
+      <p class="font-serif italic text-stone-400 text-sm mb-6">14.11.2026 — Lavras, Guarulhos - SP</p>
+      
+      <div class="flex items-center gap-6 text-xs text-stone-400 mb-6">
+        <a href="#historia" class="hover:text-[#FFE082]">Nossa História</a>
+        <span>•</span>
+        <a href="#evento" class="hover:text-[#FFE082]">O Evento</a>
+        <span>•</span>
+        <a href="#presentes" class="hover:text-[#FFE082]">Presentes</a>
+        <span>•</span>
+        <a href="admin.html" class="hover:text-[#FFE082] flex items-center gap-1">
+          <i data-lucide="lock" class="w-3 h-3"></i> Painel dos Noivos
+        </a>
+      </div>
+
+      <p class="text-[11px] text-stone-500">
+        Desenvolvido com todo amor & tecnologia de ponta para o Casamento de Izabela & Ivan.
+      </p>
+    </div>
+  </footer>
+
+
+  <!-- ==========================================================================
+       PIX MODAL DIALOG (GLASSMORPHISM DE LUXO)
+       ========================================================================== -->
+  <div id="pix-gift-modal" class="modal-backdrop">
+    <div class="modal-content-luxury relative text-center">
+      
+      <!-- Close Button -->
+      <button id="close-pix-modal" class="absolute top-4 right-4 text-stone-400 hover:text-white p-2 rounded-full transition-colors" aria-label="Fechar">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-[#FFE082]">Presente para os Noivos</span>
+      <h3 id="modal-gift-title" class="font-serif text-2xl font-bold text-white mt-1 mb-2">Jantar a Dois</h3>
+      
+      <div id="modal-gift-amount-display" class="font-serif text-3xl font-bold text-[#FFE082] mb-3">
+        R$ 150,00
+      </div>
+
+      <p class="text-xs text-stone-300 mb-4 max-w-sm mx-auto">
+        Abra o app do seu banco, selecione a opção <strong>Pix</strong> e aponte a câmera para o QR Code abaixo ou use o <strong>Pix Copia e Cola</strong>.
+      </p>
+
+      <!-- Input para Ajuste de Valor -->
+      <div class="mb-4 text-left max-w-xs mx-auto">
+        <label class="block text-[11px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
+          Valor do Pix (R$):
+        </label>
+        <input type="number" id="custom-pix-amount" min="1" step="any" class="form-control-luxury !py-2 !text-sm text-center font-bold text-[#FFE082]" />
+      </div>
+
+      <!-- QR Code Container -->
+      <div class="qr-code-box">
+        <div id="pix-qrcode-container"></div>
+      </div>
+
+      <!-- Copia e Cola Field -->
+      <div class="mt-4 space-y-2">
+        <input type="text" id="pix-copia-cola-input" readonly class="w-full bg-[#150205] border border-[#D4AF37]/40 rounded-lg p-2.5 text-xs text-stone-300 font-mono text-center select-all" />
+        <button id="copy-pix-btn" class="btn-gold w-full !py-3 !text-xs">
+          <i data-lucide="copy" class="w-4 h-4"></i> Copiar Código Pix (Copia e Cola)
+        </button>
+      </div>
+
+      <p class="text-[11px] text-stone-400 mt-4 flex items-center justify-center gap-1.5">
+        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i> Pagamento seguro processado direto para Izabela & Ivan.
+      </p>
+    </div>
+  </div>
+
+
+  <!-- ==========================================================================
+       SCRIPTS
+       ========================================================================== -->
+  <!-- Firebase App SDK (Opcional se conectar Firestore real) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <!-- Project Modular Scripts -->
+  <script src="js/pix-generator.js"></script>
+  <script src="js/calendar.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/app.js"></script>
+  
+  <script>
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>
