@@ -97,10 +97,10 @@ function initPhoneIntro() {
 }
 
 /* ==========================================================================
-   1. COUNTDOWN CONTROLLER (14 DE NOVEMBRO ÀS 14:00)
+   1. COUNTDOWN CONTROLLER (14 DE NOVEMBRO ÀS 12:00)
    ========================================================================== */
 function initCountdown() {
-  const targetDate = new Date("2026-11-14T14:00:00").getTime();
+  const targetDate = new Date("2026-11-14T12:00:00").getTime();
 
   function update() {
     const now = new Date().getTime();
