@@ -60,6 +60,7 @@ function initPhoneIntro() {
             audioBtn.innerHTML = '<i data-lucide="volume-2" class="w-5 h-5"></i>';
             if (window.lucide) lucide.createIcons();
           }
+          showAudioBubble("Tocando: Stephen Sanchez — Until I Found You 🎵", "volume-2");
         }).catch(err => {
           console.warn("Audio autoplay blocked by mobile policy:", err);
           // Fallback: tocar no próximo toque na tela
@@ -134,8 +135,22 @@ function initCountdown() {
 }
 
 /* ==========================================================================
-   2. AMBIENT AUDIO PLAYER
+   2. AMBIENT AUDIO PLAYER & BUBBLE
    ========================================================================== */
+function showAudioBubble(text, iconName = "music") {
+  const bubble = document.getElementById("audio-status-bubble");
+  if (!bubble) return;
+
+  bubble.innerHTML = `<i data-lucide="${iconName}" class="w-4 h-4 text-[#FFE082]"></i> <span id="audio-status-text">${text}</span>`;
+  if (window.lucide) lucide.createIcons();
+
+  bubble.classList.add("show");
+  clearTimeout(window._audioBubbleTimeout);
+  window._audioBubbleTimeout = setTimeout(() => {
+    bubble.classList.remove("show");
+  }, 4500);
+}
+
 function initAudioPlayer() {
   const audioBtn = document.getElementById("audio-toggle-btn");
   const audio = document.getElementById("wedding-ambient-audio");
@@ -149,15 +164,15 @@ function initAudioPlayer() {
       audio.pause();
       audioBtn.classList.remove("playing");
       audioBtn.innerHTML = '<i data-lucide="music" class="w-5 h-5"></i>';
-      showToast("Música pausada");
+      showAudioBubble("Música Pausada 🔇", "volume-x");
     } else {
       audio.play().then(() => {
         audioBtn.classList.add("playing");
         audioBtn.innerHTML = '<i data-lucide="volume-2" class="w-5 h-5"></i>';
-        showToast("Tocando: Stephen Sanchez — Until I Found You 🎵");
+        showAudioBubble("Tocando: Stephen Sanchez — Until I Found You 🎵", "volume-2");
       }).catch(err => {
         console.warn("Audio autoplay policy:", err);
-        showToast("Toque na tela para habilitar o áudio");
+        showAudioBubble("Toque para ativar o áudio 🎵", "music");
       });
     }
     isPlaying = !isPlaying;
