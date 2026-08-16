@@ -1199,4 +1199,48 @@ body {
   transform: scale(1.15);
 }
 
+/* Floating 3D Map Custom Controls */
+.map-3d-custom-bar {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  z-index: 10;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-map-quick-action {
+  background: rgba(34, 3, 8, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  border-radius: 9999px;
+  padding: 6px 14px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #FFE082;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  transition: var(--transition-smooth);
+}
+
+.btn-map-quick-action:hover {
+  background: var(--gold-gradient);
+  color: #220308;
+  border-color: transparent;
+  transform: translateY(-1px);
+}
+
+.btn-map-quick-action.active {
+  background: var(--gold-gradient);
+  color: #220308;
+  border-color: transparent;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
+}
+
+
 

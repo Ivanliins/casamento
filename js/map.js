@@ -1,6 +1,6 @@
 /**
- * WEDDING 3D INTERACTIVE LOCATION MAP
- * Powered by MapLibre GL JS (No Mapbox, No Google Maps API required)
+ * WEDDING 3D INTERACTIVE LOCATION MAP (VIBRANT & ALIVE)
+ * Powered by MapLibre GL JS with 3D Buildings & Rich Street Detail
  */
 
 const weddingLocation = {
@@ -24,90 +24,20 @@ function getNavigationLinks() {
 }
 
 class WeddingLocationMap {
-  constructor(containerId = "wedding-3d-map", options = {}) {
+  constructor(containerId = "wedding-3d-map") {
     this.containerId = containerId;
     this.container = document.getElementById(containerId);
     this.coords = [weddingLocation.longitude, weddingLocation.latitude];
     this.map = null;
     this.hasAnimated = false;
-    this.isInitialized = false;
+    this.isRotating = false;
+    this.rotationAnimation = null;
 
-    // Estilo elegante em Dark Matter compatível com WebGL e 3D
-    this.mapStyle = options.styleUrl || {
-      version: 8,
-      name: "WeddingDarkLuxury",
-      sources: {
-        "carto-dark": {
-          type: "raster",
-          tiles: [
-            "https://a.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png",
-            "https://b.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png",
-            "https://c.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png",
-            "https://d.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png"
-          ],
-          tileSize: 256,
-          attribution: "© OpenStreetMap contributors, © CARTO"
-        }
-      },
-      layers: [
-        {
-          id: "carto-dark-layer",
-          type: "raster",
-          source: "carto-dark",
-          minzoom: 0,
-          maxzoom: 20
-        }
-      ]
-    };
+    // Estilo vetorial completo OpenFreeMap (com ruas detalhadas, pontos de interesse e suporte a prédios 3D)
+    this.vectorStyleUrl = "https://tiles.openfreemap.org/styles/liberty";
+    this.darkVectorStyleUrl = "https://tiles.openfreemap.org/styles/dark";
 
     this.init();
-  }
-
-  init() {
-    if (!this.container) return;
-
-    if (!this.isWebGLSupported() || typeof maplibregl === "undefined") {
-      this.renderFallback();
-      return;
-    }
-
-    try {
-      this.map = new maplibregl.Map({
-        container: this.containerId,
-        style: this.mapStyle,
-        center: [this.coords[0] - 0.004, this.coords[1] - 0.003],
-        zoom: 14.2,
-        pitch: 45,
-        bearing: -15,
-        antialias: true,
-        attributionControl: false
-      });
-
-      // Controles 3D e Bússola
-      const navControl = new maplibregl.NavigationControl({
-        visualizePitch: true,
-        showZoom: true,
-        showCompass: true
-      });
-      this.map.addControl(navControl, "top-right");
-
-      this.map.on("load", () => {
-        this.onMapReady();
-      });
-
-      // Garantir redimensionamento correto
-      setTimeout(() => {
-        if (this.map) this.map.resize();
-      }, 500);
-
-      window.addEventListener("resize", () => {
-        if (this.map) this.map.resize();
-      });
-
-    } catch (err) {
-      console.warn("Erro ao iniciar MapLibre, usando fallback:", err);
-      this.renderFallback();
-    }
   }
 
   isWebGLSupported() {
@@ -122,12 +52,184 @@ class WeddingLocationMap {
     }
   }
 
+  init() {
+    if (!this.container) return;
+
+    if (!this.isWebGLSupported() || typeof maplibregl === "undefined") {
+      this.renderFallback();
+      return;
+    }
+
+    try {
+      // Criação do mapa com ângulo cinematográfico e iluminação 3D
+      this.map = new maplibregl.Map({
+        container: this.containerId,
+        style: this.vectorStyleUrl,
+        center: [this.coords[0] - 0.0035, this.coords[1] - 0.0025],
+        zoom: 14.8,
+        pitch: 52,
+        bearing: -20,
+        antialias: true,
+        attributionControl: false,
+        cooperativeGestures: true
+      });
+
+      // Controles 3D personalizados
+      const navControl = new maplibregl.NavigationControl({
+        visualizePitch: true,
+        showZoom: true,
+        showCompass: true
+      });
+      this.map.addControl(navControl, "top-right");
+
+      // Adicionar botão de modo órbita / rotação 3D ao vivo
+      this.addCustomMapControls();
+
+      this.map.on("load", () => {
+        this.onMapReady();
+      });
+
+      this.map.on("error", (e) => {
+        console.warn("Tentando estilo alternativo de alta compatibilidade:", e);
+      });
+
+      // Redimensionamento garantido
+      setTimeout(() => {
+        if (this.map) this.map.resize();
+      }, 400);
+
+      window.addEventListener("resize", () => {
+        if (this.map) this.map.resize();
+      });
+
+    } catch (err) {
+      console.warn("Erro ao iniciar MapLibre, usando fallback:", err);
+      this.renderFallback();
+    }
+  }
+
   onMapReady() {
     this.map.resize();
+    this.addVenueRadiusGlow();
+    this.add3DBuildings();
     this.addCustomMarker();
     this.triggerCinematicFlyIn();
   }
 
+  // Camada de edifícios 3D com alturas reais e cores elegantes
+  add3DBuildings() {
+    try {
+      const layers = this.map.getStyle().layers;
+      let labelLayerId;
+      for (let i = 0; i < layers.length; i++) {
+        if (layers[i].type === "symbol" && layers[i].layout && layers[i].layout["text-field"]) {
+          labelLayerId = layers[i].id;
+          break;
+        }
+      }
+
+      // Adiciona extrusão 3D para todas as construções da região
+      if (this.map.getSource("openmaptiles")) {
+        this.map.addLayer(
+          {
+            id: "3d-buildings-extrusion",
+            source: "openmaptiles",
+            "source-layer": "building",
+            type: "fill-extrusion",
+            minzoom: 14,
+            paint: {
+              "fill-extrusion-color": [
+                "interpolate",
+                ["linear"],
+                ["get", "render_height"],
+                0, "#e8dcd0",
+                15, "#d9c4b0",
+                30, "#c29b68",
+                60, "#a8783e",
+                100, "#8a1c2e"
+              ],
+              "fill-extrusion-height": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                14, 0,
+                14.5, ["coalesce", ["get", "render_height"], 8]
+              ],
+              "fill-extrusion-base": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                14, 0,
+                14.5, ["coalesce", ["get", "render_min_height"], 0]
+              ],
+              "fill-extrusion-opacity": 0.82
+            }
+          },
+          labelLayerId
+        );
+      }
+    } catch (e) {
+      console.log("Nota sobre camada 3D:", e);
+    }
+  }
+
+  // Raio de destaque dourado em volta do local da cerimônia
+  addVenueRadiusGlow() {
+    try {
+      const radiusPoints = this.createGeoJSONCircle(this.coords, 0.08); // 80 metros
+      this.map.addSource("venue-glow-area", {
+        type: "geojson",
+        data: radiusPoints
+      });
+
+      this.map.addLayer({
+        id: "venue-glow-fill",
+        type: "fill",
+        source: "venue-glow-area",
+        paint: {
+          "fill-color": "#D4AF37",
+          "fill-opacity": 0.22
+        }
+      });
+
+      this.map.addLayer({
+        id: "venue-glow-stroke",
+        type: "line",
+        source: "venue-glow-area",
+        paint: {
+          "line-color": "#D4AF37",
+          "line-width": 2.5,
+          "line-dasharray": [2, 2]
+        }
+      });
+    } catch (e) {}
+  }
+
+  createGeoJSONCircle(center, radiusInKm, points = 64) {
+    const coords = { latitude: center[1], longitude: center[0] };
+    const km = radiusInKm;
+    const ret = [];
+    const distanceX = km / (111.32 * Math.cos((coords.latitude * Math.PI) / 180));
+    const distanceY = km / 110.574;
+
+    for (let i = 0; i < points; i++) {
+      const theta = (i / points) * (2 * Math.PI);
+      const x = distanceX * Math.cos(theta);
+      const y = distanceY * Math.sin(theta);
+      ret.push([coords.longitude + x, coords.latitude + y]);
+    }
+    ret.push(ret[0]);
+
+    return {
+      type: "Feature",
+      geometry: {
+        type: "Polygon",
+        coordinates: [ret]
+      }
+    };
+  }
+
+  // Marcador de casamento com anéis dourados e pulso suave
   addCustomMarker() {
     const el = document.createElement("div");
     el.className = "wedding-map-marker";
@@ -178,12 +280,65 @@ class WeddingLocationMap {
       .setPopup(popup)
       .addTo(this.map);
 
-    // Abre o popup automaticamente após a aproximação da câmera
     setTimeout(() => {
       if (this.map) {
         popup.addTo(this.map);
       }
     }, 3800);
+  }
+
+  // Adiciona botão flutuante para girar / passear em 3D
+  addCustomMapControls() {
+    const controlsDiv = document.createElement("div");
+    controlsDiv.className = "map-3d-custom-bar";
+    controlsDiv.innerHTML = `
+      <button id="btn-toggle-orbit" class="btn-map-quick-action" title="Girar e explorar visão 3D">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+        <span>Vista 3D Dinâmica</span>
+      </button>
+      <button id="btn-recenter-map" class="btn-map-quick-action" title="Recentralizar no local">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+        <span>Recentralizar</span>
+      </button>
+    `;
+
+    this.container.appendChild(controlsDiv);
+
+    document.getElementById("btn-toggle-orbit")?.addEventListener("click", () => {
+      this.toggleOrbit();
+    });
+
+    document.getElementById("btn-recenter-map")?.addEventListener("click", () => {
+      if (!this.map) return;
+      this.map.flyTo({
+        center: this.coords,
+        zoom: 17,
+        pitch: 58,
+        bearing: 15,
+        speed: 0.8
+      });
+    });
+  }
+
+  toggleOrbit() {
+    if (!this.map) return;
+    this.isRotating = !this.isRotating;
+    const btn = document.getElementById("btn-toggle-orbit");
+
+    if (this.isRotating) {
+      if (btn) btn.classList.add("active");
+      const rotateCamera = () => {
+        if (!this.isRotating || !this.map) return;
+        this.map.rotateTo((this.map.getBearing() + 0.3) % 360, { duration: 0 });
+        this.rotationAnimation = requestAnimationFrame(rotateCamera);
+      };
+      rotateCamera();
+    } else {
+      if (btn) btn.classList.remove("active");
+      if (this.rotationAnimation) {
+        cancelAnimationFrame(this.rotationAnimation);
+      }
+    }
   }
 
   triggerCinematicFlyIn() {
@@ -194,9 +349,9 @@ class WeddingLocationMap {
     if (prefersReducedMotion) {
       this.map.jumpTo({
         center: this.coords,
-        zoom: 16.6,
-        pitch: 52,
-        bearing: 10
+        zoom: 17,
+        pitch: 58,
+        bearing: 15
       });
       return;
     }
@@ -205,14 +360,14 @@ class WeddingLocationMap {
       if (!this.map) return;
       this.map.flyTo({
         center: this.coords,
-        zoom: 16.8,
-        pitch: 55,
-        bearing: 12,
+        zoom: 17,
+        pitch: 58,
+        bearing: 15,
         speed: 0.6,
         curve: 1.4,
         essential: true
       });
-    }, 500);
+    }, 600);
   }
 
   renderFallback() {
@@ -243,7 +398,6 @@ class WeddingLocationMap {
   }
 }
 
-// Inicializar quando a página carregar
 document.addEventListener("DOMContentLoaded", () => {
   window.weddingLocationMapInstance = new WeddingLocationMap("wedding-3d-map");
 });
