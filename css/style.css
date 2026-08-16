@@ -875,6 +875,20 @@ body {
 }
 
 @keyframes buttonShinePulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 0 30px rgba(255, 224, 130, 0.8);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+  }
+}
+
 /* ==========================================================================
    3D INTERACTIVE WEDDING MAP & NAVIGATION (MAPLIBRE GL JS)
    ========================================================================== */

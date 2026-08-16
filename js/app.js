@@ -40,8 +40,13 @@ function initPhoneIntro() {
       introOverlay.style.display = "none";
     }, 800);
 
-    // Revelar e ativar seções da página
+    // Revelar e ativar seções da página e redimensionar mapa
     document.querySelectorAll(".reveal-fade").forEach(el => el.classList.add("active"));
+    setTimeout(() => {
+      if (window.weddingLocationMapInstance?.map) {
+        window.weddingLocationMapInstance.map.resize();
+      }
+    }, 400);
 
     // Iniciar vídeo de background do Hero
     const heroVideo = document.querySelector(".hero-video-bg");

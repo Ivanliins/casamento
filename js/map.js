@@ -32,40 +32,84 @@ class WeddingLocationMap {
     this.hasAnimated = false;
     this.isInitialized = false;
 
-    // Configuração isolada de estilo (sem Mapbox, livre de chaves pagas)
-    this.mapStyle = options.styleUrl || "https://tiles.openfreemap.org/styles/dark";
-    this.fallbackStyle = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
+    // Estilo elegante em Dark Matter compatível com WebGL e 3D
+    this.mapStyle = options.styleUrl || {
+      version: 8,
+      name: "WeddingDarkLuxury",
+      sources: {
+        "carto-dark": {
+          type: "raster",
+          tiles: [
+            "https://a.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png",
+            "https://b.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png",
+            "https://c.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png",
+            "https://d.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png"
+          ],
+          tileSize: 256,
+          attribution: "© OpenStreetMap contributors, © CARTO"
+        }
+      },
+      layers: [
+        {
+          id: "carto-dark-layer",
+          type: "raster",
+          source: "carto-dark",
+          minzoom: 0,
+          maxzoom: 20
+        }
+      ]
+    };
 
-    this.initObserver();
+    this.init();
   }
 
-  // Lazy loading com IntersectionObserver para máxima performance
-  initObserver() {
+  init() {
     if (!this.container) return;
 
-    // Se IntersectionObserver não existir, carrega direto
-    if (!("IntersectionObserver" in window)) {
-      this.initMap();
+    if (!this.isWebGLSupported() || typeof maplibregl === "undefined") {
+      this.renderFallback();
       return;
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !this.isInitialized) {
-            this.isInitialized = true;
-            this.initMap();
-            observer.disconnect();
-          }
-        });
-      },
-      { rootMargin: "250px 0px" } // Inicia antes de entrar completamente na tela
-    );
+    try {
+      this.map = new maplibregl.Map({
+        container: this.containerId,
+        style: this.mapStyle,
+        center: [this.coords[0] - 0.004, this.coords[1] - 0.003],
+        zoom: 14.2,
+        pitch: 45,
+        bearing: -15,
+        antialias: true,
+        attributionControl: false
+      });
 
-    observer.observe(this.container);
+      // Controles 3D e Bússola
+      const navControl = new maplibregl.NavigationControl({
+        visualizePitch: true,
+        showZoom: true,
+        showCompass: true
+      });
+      this.map.addControl(navControl, "top-right");
+
+      this.map.on("load", () => {
+        this.onMapReady();
+      });
+
+      // Garantir redimensionamento correto
+      setTimeout(() => {
+        if (this.map) this.map.resize();
+      }, 500);
+
+      window.addEventListener("resize", () => {
+        if (this.map) this.map.resize();
+      });
+
+    } catch (err) {
+      console.warn("Erro ao iniciar MapLibre, usando fallback:", err);
+      this.renderFallback();
+    }
   }
 
-  // Verificação de suporte a WebGL
   isWebGLSupported() {
     try {
       const canvas = document.createElement("canvas");
@@ -78,96 +122,12 @@ class WeddingLocationMap {
     }
   }
 
-  initMap() {
-    if (typeof maplibregl === "undefined" || !this.isWebGLSupported()) {
-      this.renderFallback();
-      return;
-    }
-
-    try {
-      // Criação da instância do MapLibre com câmera inicial cinematográfica
-      this.map = new maplibregl.Map({
-        container: this.containerId,
-        style: this.mapStyle,
-        center: [this.coords[0] - 0.006, this.coords[1] - 0.004], // Ponto de partida cinematográfico
-        zoom: 13.8,
-        pitch: 40,
-        bearing: -20,
-        antialias: true,
-        attributionControl: false,
-        cooperativeGestures: true // Não bloqueia o scroll suave no celular
-      });
-
-      // Controles 3D personalizados elegantes
-      const navControl = new maplibregl.NavigationControl({
-        visualizePitch: true,
-        showZoom: true,
-        showCompass: true
-      });
-      this.map.addControl(navControl, "top-right");
-
-      this.map.on("load", () => {
-        this.onMapLoaded();
-      });
-
-      this.map.on("error", (e) => {
-        console.warn("MapLibre tile fallback:", e);
-        if (this.map.getStyle().name !== "dark-matter") {
-          try {
-            this.map.setStyle(this.fallbackStyle);
-          } catch (err) {
-            this.renderFallback();
-          }
-        }
-      });
-    } catch (err) {
-      console.error("Erro ao inicializar MapLibre:", err);
-      this.renderFallback();
-    }
-  }
-
-  onMapLoaded() {
-    this.add3DBuildings();
+  onMapReady() {
+    this.map.resize();
     this.addCustomMarker();
     this.triggerCinematicFlyIn();
   }
 
-  // Camada de edifícios 3D se a fonte vetorial suportar
-  add3DBuildings() {
-    try {
-      const layers = this.map.getStyle().layers;
-      let labelLayerId;
-      for (let i = 0; i < layers.length; i++) {
-        if (layers[i].type === "symbol" && layers[i].layout && layers[i].layout["text-field"]) {
-          labelLayerId = layers[i].id;
-          break;
-        }
-      }
-
-      if (this.map.getSource("openmaptiles")) {
-        this.map.addLayer(
-          {
-            id: "3d-buildings",
-            source: "openmaptiles",
-            "source-layer": "building",
-            type: "fill-extrusion",
-            minzoom: 14,
-            paint: {
-              "fill-extrusion-color": "#42101b",
-              "fill-extrusion-height": ["get", "render_height"],
-              "fill-extrusion-base": ["get", "render_min_height"],
-              "fill-extrusion-opacity": 0.65
-            }
-          },
-          labelLayerId
-        );
-      }
-    } catch (e) {
-      // 3D buildings opcional se a camada não estiver presente
-    }
-  }
-
-  // Marcador personalizado de alto luxo com anéis de casamento e pulso dourado
   addCustomMarker() {
     const el = document.createElement("div");
     el.className = "wedding-map-marker";
@@ -185,7 +145,6 @@ class WeddingLocationMap {
       <div class="marker-pin-tail"></div>
     `;
 
-    // Popup em glassmorphism refinado
     const popupContent = `
       <div class="wedding-map-popup-card">
         <div class="popup-gold-badge">✦ Nosso grande dia ✦</div>
@@ -219,27 +178,25 @@ class WeddingLocationMap {
       .setPopup(popup)
       .addTo(this.map);
 
-    // Abrir popup automaticamente ao aproximar a câmera
+    // Abre o popup automaticamente após a aproximação da câmera
     setTimeout(() => {
-      if (this.map && !this.map.isMoving()) {
+      if (this.map) {
         popup.addTo(this.map);
       }
-    }, 4200);
+    }, 3800);
   }
 
-  // Animação cinematográfica de aproximação
   triggerCinematicFlyIn() {
     if (this.hasAnimated) return;
     this.hasAnimated = true;
 
-    // Respeita prefers-reduced-motion
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) {
       this.map.jumpTo({
         center: this.coords,
         zoom: 16.6,
-        pitch: 55,
-        bearing: 15
+        pitch: 52,
+        bearing: 10
       });
       return;
     }
@@ -249,16 +206,15 @@ class WeddingLocationMap {
       this.map.flyTo({
         center: this.coords,
         zoom: 16.8,
-        pitch: 58,
-        bearing: 15,
-        speed: 0.65, // Aproximação lenta, elegante e nobre
-        curve: 1.42,
+        pitch: 55,
+        bearing: 12,
+        speed: 0.6,
+        curve: 1.4,
         essential: true
       });
-    }, 600);
+    }, 500);
   }
 
-  // Fallback elegante caso WebGL ou tiles falhem
   renderFallback() {
     if (!this.container) return;
     this.container.innerHTML = `
@@ -287,7 +243,7 @@ class WeddingLocationMap {
   }
 }
 
-// Inicialização automática quando o DOM estiver pronto
+// Inicializar quando a página carregar
 document.addEventListener("DOMContentLoaded", () => {
   window.weddingLocationMapInstance = new WeddingLocationMap("wedding-3d-map");
 });
