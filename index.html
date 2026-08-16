@@ -343,8 +343,98 @@
         </div>
       </div>
 
+      <!-- Expandable Interactive 3D Location Map Card (Framer-Motion / 3D Tilt Style) -->
+      <div id="expandable-map-card" class="expand-map-wrapper">
+        <div class="expand-map-inner">
+          
+          <!-- Animated Background Vector Map Grid & Streets -->
+          <div class="expand-map-canvas-bg">
+            <svg class="absolute inset-0 w-full h-full" preserveAspectRatio="none">
+              <!-- Grid Background -->
+              <defs>
+                <pattern id="card-map-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+                  <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(212,175,55,0.08)" stroke-width="0.75" />
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#card-map-grid)" />
+
+              <!-- Main Avenue / Street lines -->
+              <line x1="0%" y1="35%" x2="100%" y2="35%" class="map-animated-street" stroke="#D4AF37" stroke-opacity="0.45" stroke-width="3" />
+              <line x1="0%" y1="68%" x2="100%" y2="68%" class="map-animated-street" stroke="#D4AF37" stroke-opacity="0.35" stroke-width="2.5" />
+              
+              <!-- Vertical Streets -->
+              <line x1="32%" y1="0%" x2="32%" y2="100%" class="map-animated-street" stroke="#FFE082" stroke-opacity="0.4" stroke-width="2.5" />
+              <line x1="68%" y1="0%" x2="68%" y2="100%" class="map-animated-street" stroke="#FFE082" stroke-opacity="0.3" stroke-width="2" />
+              
+              <!-- Secondary streets -->
+              <line x1="0%" y1="18%" x2="100%" y2="18%" class="map-animated-street" stroke="#D4AF37" stroke-opacity="0.2" stroke-width="1.2" />
+              <line x1="0%" y1="84%" x2="100%" y2="84%" class="map-animated-street" stroke="#D4AF37" stroke-opacity="0.2" stroke-width="1.2" />
+              <line x1="16%" y1="0%" x2="16%" y2="100%" class="map-animated-street" stroke="#D4AF37" stroke-opacity="0.2" stroke-width="1.2" />
+              <line x1="84%" y1="0%" x2="84%" y2="100%" class="map-animated-street" stroke="#D4AF37" stroke-opacity="0.2" stroke-width="1.2" />
+            </svg>
+
+            <!-- 3D Buildings Blocks -->
+            <div class="map-building-box" style="top: 18%; left: 8%; width: 18%; height: 22%;"></div>
+            <div class="map-building-box" style="top: 42%; left: 38%; width: 22%; height: 18%;"></div>
+            <div class="map-building-box" style="top: 15%; right: 10%; width: 16%; height: 26%;"></div>
+            <div class="map-building-box" style="bottom: 14%; left: 10%; width: 14%; height: 16%;"></div>
+            <div class="map-building-box" style="bottom: 12%; right: 12%; width: 20%; height: 20%;"></div>
+
+            <!-- Central Wedding Pin Marker with Glow -->
+            <div class="expand-map-pin">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" class="drop-shadow-2xl">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#D4AF37" />
+                <circle cx="12" cy="9" r="3" fill="#220308" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Card Content Layer -->
+          <div class="expand-map-content">
+            <!-- Top bar -->
+            <div class="expand-map-top">
+              <div class="flex items-center gap-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFE082" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
+                  <line x1="9" y1="3" x2="9" y2="18" />
+                  <line x1="15" x2="15" y1="6" x2="15" y2="21" />
+                </svg>
+                <span class="text-xs font-semibold text-stone-200">Localização do Casamento</span>
+              </div>
+
+              <div class="expand-map-badge-live">
+                <span class="live-dot"></span>
+                <span>AO VIVO</span>
+              </div>
+            </div>
+
+            <!-- Bottom details -->
+            <div class="expand-map-bottom">
+              <h4 class="expand-map-title">R. Abaíra, 264 — Jardim IV Centenário</h4>
+              <p class="expand-map-coords">-23.398608° S, -46.4329713° W</p>
+              <div class="expand-map-line"></div>
+
+              <!-- Action buttons inside expanded card -->
+              <div class="expand-map-expanded-actions">
+                <a href="https://www.google.com/maps/dir/?api=1&destination=-23.398608,-46.4329713" target="_blank" rel="noopener noreferrer" class="btn-popup-nav btn-google-maps">
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                  <span>Google Maps</span>
+                </a>
+                <a href="https://waze.com/ul?ll=-23.398608%2C-46.4329713&navigate=yes" target="_blank" rel="noopener noreferrer" class="btn-popup-nav btn-waze">
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3a9 9 0 0 0-9 9c0 3.3 1.8 6.2 4.5 7.7v1.8a1.5 1.5 0 0 0 2.2 1.3l2.8-1.5c.5.1 1 .2 1.5.2a9 9 0 0 0 9-9 9 9 0 0 0-9-9zm-2.5 7.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm-6.5 4.5c.8 1.5 2.3 2.5 4 2.5s3.2-1 4-2.5h-8z"/></svg>
+                  <span>Waze</span>
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <p class="expand-map-hint">✦ Toque para expandir o mapa 3D ✦</p>
+      </div>
+
       <!-- 3D Interactive Map (MapLibre GL JS - Sem dependência de API Google ou Mapbox) -->
-      <div class="wedding-map-wrapper max-w-4xl mx-auto mt-12">
+      <div class="wedding-map-wrapper max-w-4xl mx-auto mt-6">
         <div id="wedding-3d-map" class="wedding-map-container"></div>
       </div>
 
@@ -680,6 +770,7 @@
   <script src="js/pix-generator.js"></script>
   <script src="js/calendar.js"></script>
   <script src="js/map.js"></script>
+  <script src="js/expand-map.js"></script>
   <script src="js/firebase-config.js"></script>
   <script src="js/app.js"></script>
   

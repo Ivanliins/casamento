@@ -1303,12 +1303,207 @@ body {
   transform: translateY(-1px);
 }
 
-.btn-map-quick-action.active {
-  background: var(--gold-gradient);
-  color: #220308;
-  border-color: transparent;
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
+/* ==========================================================================
+   EXPANDABLE 3D LOCATION CARD COMPONENT (SHADCN / FRAMER-MOTION STYLE)
+   ========================================================================== */
+.expand-map-wrapper {
+  perspective: 1000px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem auto;
+  user-select: none;
+  cursor: pointer;
+  position: relative;
+  max-width: 100%;
 }
+
+.expand-map-inner {
+  position: relative;
+  width: 320px;
+  height: 155px;
+  border-radius: 1.25rem;
+  border: 1.5px solid rgba(212, 175, 55, 0.45);
+  background: linear-gradient(145deg, rgba(34, 3, 8, 0.95) 0%, rgba(20, 2, 5, 0.98) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(212, 175, 55, 0.15);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s ease;
+}
+
+@media (max-width: 480px) {
+  .expand-map-inner {
+    width: 290px;
+    height: 150px;
+  }
+}
+
+.expand-map-wrapper.expanded .expand-map-inner {
+  width: 100%;
+  max-width: 460px;
+  height: 330px;
+  border-color: #FFE082;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), var(--gold-glow);
+}
+
+/* Background Animated Vector Map (SVG) */
+.expand-map-canvas-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  background: radial-gradient(circle at center, rgba(60, 9, 20, 0.6) 0%, rgba(18, 1, 4, 0.95) 100%);
+}
+
+.expand-map-wrapper.expanded .expand-map-canvas-bg {
+  opacity: 1;
+}
+
+.map-animated-street {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: drawStreetLine 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes drawStreetLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* 3D Buildings in Map */
+.map-building-box {
+  position: absolute;
+  border-radius: 4px;
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  transform: scale(0.6);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.expand-map-wrapper.expanded .map-building-box {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Center Pin Marker */
+.expand-map-pin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s;
+  z-index: 5;
+}
+
+.expand-map-wrapper.expanded .expand-map-pin {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Content Layout inside Card */
+.expand-map-content {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.25rem;
+}
+
+.expand-map-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.expand-map-badge-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(34, 3, 8, 0.8);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #FFE082;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34D399;
+  box-shadow: 0 0 8px #34D399;
+  animation: pulseLiveDot 1.8s infinite;
+}
+
+@keyframes pulseLiveDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.4); }
+}
+
+.expand-map-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.expand-map-title {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+  letter-spacing: -0.01em;
+  transition: color 0.3s ease;
+}
+
+.expand-map-coords {
+  font-family: monospace;
+  font-size: 0.72rem;
+  color: #FFE082;
+  opacity: 0.85;
+}
+
+.expand-map-line {
+  height: 1.5px;
+  background: linear-gradient(90deg, #D4AF37 0%, rgba(212, 175, 55, 0.2) 60%, transparent 100%);
+  margin-top: 4px;
+  width: 100%;
+}
+
+.expand-map-hint {
+  font-size: 0.68rem;
+  color: #D6C2A5;
+  margin-top: 6px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: opacity 0.3s ease;
+}
+
+.expand-map-wrapper.expanded .expand-map-hint {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Actions revealed when expanded */
+.expand-map-expanded-actions {
+  display: none;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.expand-map-wrapper.expanded .expand-map-expanded-actions {
+  display: flex;
+}
+
 
 
 
