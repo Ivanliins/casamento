@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initCountdown();
   initAudioPlayer();
   initScrollEffects();
+  initFloatingRsvpButton();
   initGiftRegistry();
   initRsvpForm();
 });
@@ -70,7 +71,7 @@ function initPhoneIntro() {
           showAudioBubble("Tocando: Stephen Sanchez — Until I Found You 🎵", "volume-2");
         }).catch(err => {
           console.warn("Audio autoplay blocked by mobile policy:", err);
-          // Fallback: tocar no próximo toque na tela
+          // Fallback para toque posterior
           const touchToPlay = () => {
             audio.play().then(() => {
               if (audioBtn) {
@@ -88,8 +89,9 @@ function initPhoneIntro() {
       }
     }
 
+    // Notificação centralizada solicitada com a contagem da Celebração
     if (window.showToast) {
-      showToast("Bem-vindo ao Casamento de Izabela & Ivan! 💍✨");
+      showToast(getCelebrationCountdownText());
     }
   }
 
@@ -238,6 +240,53 @@ function initScrollEffects() {
   }, { threshold: 0.12 });
 
   document.querySelectorAll(".reveal-fade").forEach(el => observer.observe(el));
+}
+
+/* ==========================================================================
+   3.1 CELEBRATION COUNTDOWN TEXT (NOTIFICAÇÃO CENTRALIZADA)
+   ========================================================================== */
+function getCelebrationCountdownText() {
+  const targetDate = new Date("2026-11-14T12:00:00").getTime();
+  const now = new Date().getTime();
+  const difference = targetDate - now;
+
+  if (difference <= 0) {
+    return "Hoje é o grande dia da Celebração! 💍✨";
+  }
+
+  const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+  return `Faltam ${days} dias ${hours}h ${seconds}s para a Celebração.`;
+}
+
+/* ==========================================================================
+   3.2 FLOATING RSVP BUTTON (VISIBILIDADE INTELIGENTE NO MOBILE)
+   ========================================================================== */
+function initFloatingRsvpButton() {
+  const rsvpCta = document.querySelector(".floating-rsvp-cta");
+  const rsvpSection = document.getElementById("rsvp-section");
+  if (!rsvpCta) return;
+
+  function updateVisibility() {
+    const scrollY = window.scrollY || window.pageYOffset;
+    let isSectionInView = false;
+    if (rsvpSection) {
+      const rect = rsvpSection.getBoundingClientRect();
+      isSectionInView = rect.top < window.innerHeight && rect.bottom > 0;
+    }
+
+    // Só exibe após o usuário rolar além do Hero (> 450px) para não cobrir o countdown nem botões
+    if (scrollY > 450 && !isSectionInView) {
+      rsvpCta.classList.add("visible");
+    } else {
+      rsvpCta.classList.remove("visible");
+    }
+  }
+
+  window.addEventListener("scroll", updateVisibility, { passive: true });
+  updateVisibility();
 }
 
 /* ==========================================================================
@@ -463,13 +512,14 @@ function showToast(message) {
     document.body.appendChild(toast);
   }
 
-  toast.innerHTML = `<i data-lucide="sparkles" style="color: var(--gold-300);" class="w-5 h-5"></i> <span>${message}</span>`;
+  toast.innerHTML = `<i data-lucide="sparkles" style="color: #FFE082;" class="w-4 h-4 shrink-0"></i> <span class="tracking-wide">${message}</span>`;
   if (window.lucide) lucide.createIcons();
 
   toast.classList.add("show");
-  setTimeout(() => {
+  clearTimeout(window._toastTimeout);
+  window._toastTimeout = setTimeout(() => {
     toast.classList.remove("show");
-  }, 4000);
+  }, 5000);
 }
 
 window.showToast = showToast;

@@ -1,4 +1,5 @@
 # Raw backup videos
 video/*_original.mp4
+video/*novo.mp4
 *.bak
 Backup/

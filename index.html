@@ -134,9 +134,9 @@
       I & I
     </a>
     <nav class="hidden md:flex items-center gap-8 text-sm font-medium tracking-wide uppercase text-stone-200">
+      <a href="#presentes" class="hover:text-[#FFE082] transition-colors">Presentes</a>
       <a href="#historia" class="hover:text-[#FFE082] transition-colors">Nossa História</a>
       <a href="#evento" class="hover:text-[#FFE082] transition-colors">O Evento</a>
-      <a href="#presentes" class="hover:text-[#FFE082] transition-colors">Presentes</a>
       <a href="#rsvp-section" class="hover:text-[#FFE082] transition-colors">Confirmar Presença</a>
     </nav>
     <div class="flex items-center gap-3">
@@ -231,7 +231,97 @@
 
 
     <!-- ==========================================================================
-         2. STORYTELLING & VIDEO PLAYER
+         2. LISTA DE PRESENTES & PIX COTAS
+         ========================================================================== -->
+    <section id="presentes" class="py-24 px-4 relative z-10 max-w-6xl mx-auto reveal-fade">
+      <div class="text-center mb-16">
+        <span class="text-xs font-bold uppercase tracking-[0.25em] text-[#FFE082]">Mimos & Lua de Mel</span>
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-100 mt-2">Lista de Presentes</h2>
+        <div class="gold-divider">
+          <i data-lucide="gift" class="gold-divider-icon"></i>
+        </div>
+        <p class="text-stone-300 max-w-xl mx-auto text-sm sm:text-base">
+          Sua presença é o maior presente! Caso deseje nos presentear com uma cota para nossa Lua de Mel, criamos opções práticas via Pix.
+        </p>
+      </div>
+
+      <!-- Gift Showcase Cards Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Item 1 -->
+        <div class="glass-panel gift-card">
+          <div class="gift-img-wrapper">
+            <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=600&auto=format&fit=crop" alt="Jantar Romântico" />
+          </div>
+          <div class="p-5 flex flex-col flex-1 justify-between">
+            <div>
+              <h3 class="font-serif font-bold text-lg text-white mb-1">Jantar a Dois</h3>
+              <p class="text-xs text-stone-300 mb-3">Brinde especial dos noivos na primeira noite de casados.</p>
+              <div class="font-serif font-bold text-xl text-[#FFE082] mb-4">R$ 150,00</div>
+            </div>
+            <button onclick="openPixModal('Jantar a Dois dos Noivos', 150)" class="btn-gold !w-full !py-2.5 !text-xs">
+              <i data-lucide="gift" class="w-4 h-4"></i> Presentear
+            </button>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="glass-panel gift-card">
+          <div class="gift-img-wrapper">
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=600&auto=format&fit=crop" alt="Passeio na Praia" />
+          </div>
+          <div class="p-5 flex flex-col flex-1 justify-between">
+            <div>
+              <h3 class="font-serif font-bold text-lg text-white mb-1">Passeio Romântico</h3>
+              <p class="text-xs text-stone-300 mb-3">Tour inesquecível pelas mais belas paisagens da viagem.</p>
+              <div class="font-serif font-bold text-xl text-[#FFE082] mb-4">R$ 250,00</div>
+            </div>
+            <button onclick="openPixModal('Passeio Romântico da Lua de Mel', 250)" class="btn-gold !w-full !py-2.5 !text-xs">
+              <i data-lucide="gift" class="w-4 h-4"></i> Presentear
+            </button>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="glass-panel gift-card">
+          <div class="gift-img-wrapper">
+            <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=600&auto=format&fit=crop" alt="Dia de Spa Relaxante" />
+          </div>
+          <div class="p-5 flex flex-col flex-1 justify-between">
+            <div>
+              <h3 class="font-serif font-bold text-lg text-white mb-1">Spa dos Noivos</h3>
+              <p class="text-xs text-stone-300 mb-3">Massagem relaxante a dois para recarregar as energias.</p>
+              <div class="font-serif font-bold text-xl text-[#FFE082] mb-4">R$ 380,00</div>
+            </div>
+            <button onclick="openPixModal('Spa Relaxante dos Noivos', 380)" class="btn-gold !w-full !py-2.5 !text-xs">
+              <i data-lucide="gift" class="w-4 h-4"></i> Presentear
+            </button>
+          </div>
+        </div>
+
+        <!-- Item 4 (Valor Livre) -->
+        <div class="glass-panel gift-card border-dashed border-[#D4AF37]">
+          <div class="gift-img-wrapper">
+            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=600&auto=format&fit=crop" alt="Cota Livre de Amor" />
+          </div>
+          <div class="p-5 flex flex-col flex-1 justify-between">
+            <div>
+              <h3 class="font-serif font-bold text-lg text-white mb-1">Cota Livre de Amor</h3>
+              <p class="text-xs text-stone-300 mb-3">Fique à vontade para presentear com o valor que seu coração mandar.</p>
+              <div class="font-serif font-bold text-xl text-[#FFE082] mb-4">Valor à Escolha</div>
+            </div>
+            <button onclick="openPixModal('Cota Livre de Amor', 0)" class="btn-gold !w-full !py-2.5 !text-xs">
+              <i data-lucide="heart-handshake" class="w-4 h-4"></i> Escolher Valor
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==========================================================================
+         3. STORYTELLING & VIDEO PLAYER
          ========================================================================== -->
     <section id="historia" class="py-24 px-4 relative z-10 max-w-5xl mx-auto reveal-fade">
       <div class="text-center mb-12">
@@ -483,96 +573,6 @@
 
 
     <!-- ==========================================================================
-         4. PIX GIFT REGISTRY WITH DYNAMIC QR CODE MODAL
-         ========================================================================== -->
-    <section id="presentes" class="py-24 px-4 relative z-10 max-w-6xl mx-auto reveal-fade">
-      <div class="text-center mb-16">
-        <span class="text-xs font-bold uppercase tracking-[0.25em] text-[#FFE082]">Mimos & Lua de Mel</span>
-        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-100 mt-2">Lista de Presentes</h2>
-        <div class="gold-divider">
-          <i data-lucide="gift" class="gold-divider-icon"></i>
-        </div>
-        <p class="text-stone-300 max-w-xl mx-auto text-sm sm:text-base">
-          Sua presença é o maior presente! Caso deseje nos presentear com uma cota para nossa Lua de Mel, criamos opções práticas via Pix.
-        </p>
-      </div>
-
-      <!-- Gift Showcase Cards Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        
-        <!-- Item 1 -->
-        <div class="glass-panel gift-card">
-          <div class="gift-img-wrapper">
-            <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=600&auto=format&fit=crop" alt="Jantar Romântico" />
-          </div>
-          <div class="p-5 flex flex-col flex-1 justify-between">
-            <div>
-              <h3 class="font-serif font-bold text-lg text-white mb-1">Jantar a Dois</h3>
-              <p class="text-xs text-stone-300 mb-3">Brinde especial dos noivos na primeira noite de casados.</p>
-              <div class="font-serif font-bold text-xl text-[#FFE082] mb-4">R$ 150,00</div>
-            </div>
-            <button onclick="openPixModal('Jantar a Dois dos Noivos', 150)" class="btn-gold !w-full !py-2.5 !text-xs">
-              <i data-lucide="gift" class="w-4 h-4"></i> Presentear
-            </button>
-          </div>
-        </div>
-
-        <!-- Item 2 -->
-        <div class="glass-panel gift-card">
-          <div class="gift-img-wrapper">
-            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=600&auto=format&fit=crop" alt="Passeio na Praia" />
-          </div>
-          <div class="p-5 flex flex-col flex-1 justify-between">
-            <div>
-              <h3 class="font-serif font-bold text-lg text-white mb-1">Passeio Romântico</h3>
-              <p class="text-xs text-stone-300 mb-3">Tour inesquecível pelas mais belas paisagens da viagem.</p>
-              <div class="font-serif font-bold text-xl text-[#FFE082] mb-4">R$ 250,00</div>
-            </div>
-            <button onclick="openPixModal('Passeio Romântico da Lua de Mel', 250)" class="btn-gold !w-full !py-2.5 !text-xs">
-              <i data-lucide="gift" class="w-4 h-4"></i> Presentear
-            </button>
-          </div>
-        </div>
-
-        <!-- Item 3 -->
-        <div class="glass-panel gift-card">
-          <div class="gift-img-wrapper">
-            <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=600&auto=format&fit=crop" alt="Dia de Spa Relaxante" />
-          </div>
-          <div class="p-5 flex flex-col flex-1 justify-between">
-            <div>
-              <h3 class="font-serif font-bold text-lg text-white mb-1">Spa dos Noivos</h3>
-              <p class="text-xs text-stone-300 mb-3">Massagem relaxante a dois para recarregar as energias.</p>
-              <div class="font-serif font-bold text-xl text-[#FFE082] mb-4">R$ 380,00</div>
-            </div>
-            <button onclick="openPixModal('Spa Relaxante dos Noivos', 380)" class="btn-gold !w-full !py-2.5 !text-xs">
-              <i data-lucide="gift" class="w-4 h-4"></i> Presentear
-            </button>
-          </div>
-        </div>
-
-        <!-- Item 4 (Valor Livre) -->
-        <div class="glass-panel gift-card border-dashed border-[#D4AF37]">
-          <div class="gift-img-wrapper">
-            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=600&auto=format&fit=crop" alt="Cota Livre de Amor" />
-          </div>
-          <div class="p-5 flex flex-col flex-1 justify-between">
-            <div>
-              <h3 class="font-serif font-bold text-lg text-white mb-1">Cota Livre de Amor</h3>
-              <p class="text-xs text-stone-300 mb-3">Fique à vontade para presentear com o valor que seu coração mandar.</p>
-              <div class="font-serif font-bold text-xl text-[#FFE082] mb-4">Valor à Escolha</div>
-            </div>
-            <button onclick="openPixModal('Cota Livre de Amor', 0)" class="btn-gold !w-full !py-2.5 !text-xs">
-              <i data-lucide="heart-handshake" class="w-4 h-4"></i> Escolher Valor
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-
-    <!-- ==========================================================================
          5. RSVP SYSTEM (CONFIRMAÇÃO DE PRESENÇA DUPLA)
          ========================================================================== -->
     <section id="rsvp-section" class="py-24 px-4 relative z-10 max-w-3xl mx-auto reveal-fade">
@@ -692,11 +692,11 @@
       <p class="font-serif italic text-stone-400 text-sm mb-6">14.11.2026 — R. Abaíra, 264 - Jardim IV Centenario, Guarulhos - SP, 07161-010</p>
       
       <div class="flex items-center gap-6 text-xs text-stone-400 mb-6">
+        <a href="#presentes" class="hover:text-[#FFE082]">Presentes</a>
+        <span>•</span>
         <a href="#historia" class="hover:text-[#FFE082]">Nossa História</a>
         <span>•</span>
         <a href="#evento" class="hover:text-[#FFE082]">O Evento</a>
-        <span>•</span>
-        <a href="#presentes" class="hover:text-[#FFE082]">Presentes</a>
         <span>•</span>
         <a href="admin.html" class="hover:text-[#FFE082] flex items-center gap-1">
           <i data-lucide="lock" class="w-3 h-3"></i> Painel dos Noivos
