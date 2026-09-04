@@ -603,13 +603,13 @@ body {
 
 @media (max-width: 640px) {
   .hero-section {
-    padding: 3.5rem 0.85rem 1.75rem;
+    padding: 4.75rem 0.85rem 1.75rem;
     min-height: 100svh;
     align-items: flex-start;
   }
 
   .hero-content-wrapper {
-    padding-top: 0.2rem !important;
+    padding-top: 0.5rem !important;
     padding-bottom: 1rem !important;
   }
 
