@@ -102,6 +102,25 @@ class WeddingLocationMap {
         if (this.map) this.map.resize();
       });
 
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && this.map) {
+              this.map.resize();
+            }
+          });
+        }, { threshold: 0.05 });
+        observer.observe(this.container);
+      }
+
+      document.querySelectorAll('a[href="#localizacao"]').forEach(link => {
+        link.addEventListener("click", () => {
+          setTimeout(() => {
+            if (this.map) this.map.resize();
+          }, 350);
+        });
+      });
+
     } catch (err) {
       console.warn("Erro ao iniciar MapLibre, usando fallback:", err);
       this.renderFallback();
