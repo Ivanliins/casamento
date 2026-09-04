@@ -462,14 +462,81 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 6rem 1.5rem 4rem;
+  padding: 5.5rem 1.5rem 3.5rem;
   overflow: hidden;
 }
 
-@media (max-width: 640px) {
-  .hero-section {
-    padding: 5rem 1rem 3.5rem;
-  }
+.hero-content-wrapper {
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+  width: 100%;
+}
+
+.hero-top-blessing {
+  margin-bottom: 0.65rem;
+  line-height: 1.4;
+}
+
+.hero-couple-title {
+  margin-bottom: 0.35rem;
+}
+
+.hero-heart-divider {
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.hero-couple-quote {
+  margin-bottom: 1.25rem;
+  line-height: 1.45;
+}
+
+/* Wedding Date & Venue Highlights (Perfeitamente Alinhados com Ícones) */
+.hero-highlights-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  margin-bottom: 1.75rem;
+  width: 100%;
+}
+
+.hero-highlights-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.hero-highlight-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  color: #f5f5f4;
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.hero-icon-gold {
+  width: 1.05rem;
+  height: 1.05rem;
+  color: #FFE082;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.hero-gold-separator {
+  color: #D4AF37;
+  font-size: 0.85rem;
+}
+
+.hero-address-pill {
+  text-align: center;
+  max-width: 95vw;
 }
 
 .hero-video-bg {
@@ -535,24 +602,96 @@ body {
 }
 
 @media (max-width: 640px) {
-  .countdown-container {
+  .hero-section {
+    padding: 3.5rem 0.85rem 1.75rem;
+    min-height: 100svh;
+    align-items: flex-start;
+  }
+
+  .hero-content-wrapper {
+    padding-top: 0.2rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  .hero-top-blessing {
+    font-size: 0.68rem;
+    letter-spacing: 0.11em;
+    margin-bottom: 0.3rem;
+    line-height: 1.35;
+    max-width: 325px;
+  }
+
+  .hero-couple-title {
+    font-size: 2.3rem;
+    line-height: 1.1;
+    margin-bottom: 0.2rem;
+  }
+
+  .hero-heart-divider {
+    margin-top: 0.25rem;
+    margin-bottom: 0.45rem;
+  }
+
+  .hero-heart-divider .gold-divider-icon {
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+
+  .hero-couple-quote {
+    font-size: 0.82rem;
+    line-height: 1.35;
+    margin-bottom: 0.65rem;
+    max-width: 320px;
+  }
+
+  .hero-highlights-container {
+    gap: 0.35rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .hero-highlights-row {
     gap: 0.45rem;
-    max-width: 360px;
-    margin: 1.5rem auto 0;
+  }
+
+  .hero-highlight-pill {
+    font-size: 0.74rem;
+    gap: 0.35rem;
+  }
+
+  .hero-icon-gold {
+    width: 0.85rem;
+    height: 0.85rem;
+  }
+
+  .hero-address-pill {
+    font-size: 0.72rem;
+    line-height: 1.3;
+    padding: 0 0.5rem;
+  }
+
+  .countdown-container {
+    gap: 0.38rem;
+    max-width: 340px;
+    margin: 0.4rem auto 0;
   }
 
   .countdown-box {
-    padding: 0.65rem 0.25rem;
-    border-radius: 0.75rem;
+    padding: 0.5rem 0.2rem;
+    border-radius: 0.65rem;
   }
 
   .countdown-number {
-    font-size: 1.55rem;
+    font-size: 1.45rem;
   }
 
   .countdown-label {
-    font-size: 0.62rem;
-    letter-spacing: 0.06em;
+    font-size: 0.58rem;
+    letter-spacing: 0.05em;
+  }
+
+  .hero-cta-buttons {
+    margin-top: 0.85rem !important;
+    gap: 0.5rem !important;
   }
 }
 

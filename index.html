@@ -162,39 +162,40 @@
       </video>
       <div class="hero-overlay"></div>
 
-      <div class="relative z-10 max-w-4xl mx-auto px-4 py-8 flex flex-col items-center">
-        <span class="inline-block text-xs md:text-sm font-semibold tracking-[0.18em] uppercase text-[#FFE082] mb-3 text-center max-w-xl">
+      <div class="hero-content-wrapper relative z-10 max-w-4xl mx-auto px-4 flex flex-col items-center">
+        <span class="hero-top-blessing text-xs md:text-sm font-semibold tracking-[0.16em] uppercase text-[#FFE082] text-center max-w-xl">
           Com a bênção de Deus e de nossos pais convidamos você para celebrar conosco o nosso casamento.
         </span>
 
-        <h1 class="font-decorative text-4xl sm:text-6xl md:text-7xl font-bold tracking-wider leading-tight text-gold-gradient mb-2 text-center drop-shadow-2xl">
+        <h1 class="hero-couple-title font-decorative text-4xl sm:text-6xl md:text-7xl font-bold tracking-wider leading-tight text-gold-gradient text-center drop-shadow-2xl">
           Izabela & Ivan
         </h1>
 
-        <div class="gold-divider">
+        <div class="gold-divider hero-heart-divider">
           <i data-lucide="heart" class="gold-divider-icon fill-current"></i>
         </div>
 
         <!-- Nova Frase Marcante do Casal -->
-        <p class="font-serif italic text-lg sm:text-2xl text-stone-200 mb-8 max-w-2xl text-center">
+        <p class="hero-couple-quote font-serif italic text-base sm:text-xl md:text-2xl text-stone-200 max-w-2xl text-center">
           "Dois corações que se unem sob a mesma promessa. Que o amor seja a nossa melhor escolha em cada novo amanhecer."
         </p>
 
-        <!-- Wedding Date & Venue Highlights -->
-        <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-sm sm:text-base font-medium text-stone-300 mb-8 text-center">
-          <div class="flex items-center gap-2">
-            <i data-lucide="calendar" class="w-4 h-4 text-[#FFE082]"></i>
-            <span>14 de Novembro de 2026</span>
+        <!-- Wedding Date & Venue Highlights (Alinhamento Ícone e Texto) -->
+        <div class="hero-highlights-container">
+          <div class="hero-highlights-row">
+            <div class="hero-highlight-pill">
+              <i data-lucide="calendar" class="hero-icon-gold"></i>
+              <span>14 de Novembro de 2026</span>
+            </div>
+            <span class="hero-gold-separator">•</span>
+            <div class="hero-highlight-pill">
+              <i data-lucide="clock" class="hero-icon-gold"></i>
+              <span>12:00 Horas</span>
+            </div>
           </div>
-          <div class="hidden sm:block w-1.5 h-1.5 rounded-full bg-[#D4AF37]"></div>
-          <div class="flex items-center gap-2">
-            <i data-lucide="clock" class="w-4 h-4 text-[#FFE082]"></i>
-            <span>12:00 Horas</span>
-          </div>
-          <div class="hidden sm:block w-1.5 h-1.5 rounded-full bg-[#D4AF37]"></div>
-          <div class="flex items-center gap-2">
-            <i data-lucide="map-pin" class="w-4 h-4 text-[#FFE082]"></i>
-            <span>R. Abaíra, 264 - Jardim IV Centenario, Guarulhos - SP</span>
+          <div class="hero-highlight-pill hero-address-pill">
+            <i data-lucide="map-pin" class="hero-icon-gold"></i>
+            <span>R. Abaíra, 264 - Jardim IV Centenário, Guarulhos - SP</span>
           </div>
         </div>
 
@@ -219,7 +220,7 @@
         </div>
 
         <!-- Main CTA -->
-        <div class="mt-10 flex flex-col sm:flex-row items-center gap-4">
+        <div class="hero-cta-buttons mt-8 sm:mt-10 flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto">
           <a href="#rsvp-section" class="btn-gold w-full sm:w-auto">
             <i data-lucide="check-circle" class="w-5 h-5"></i> Confirmar Minha Presença
           </a>
