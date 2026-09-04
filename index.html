@@ -63,7 +63,7 @@
           loop 
           playsinline 
           poster="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop">
-          <source src="video/casamento.mp4" type="video/mp4" />
+          <source src="video/casamentovideo.mp4" type="video/mp4" />
         </video>
 
         <!-- Smartphone Overlay Content -->
@@ -154,9 +154,10 @@
          1. HERO SECTION & COUNTDOWN
          ========================================================================== -->
     <section class="hero-section">
-      <!-- Luxury Video Background -->
-      <video class="hero-video-bg" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1920&auto=format&fit=crop">
-        <source src="video/casamento.mp4" type="video/mp4" />
+      <!-- Luxury Video Background (Responsivo Desktop e Mobile) -->
+      <video id="hero-bg-video" class="hero-video-bg" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1920&auto=format&fit=crop">
+        <source src="video/casamentodesktop.mp4" type="video/mp4" media="(min-width: 768px)" />
+        <source src="video/casamentovideo.mp4" type="video/mp4" />
       </video>
       <div class="hero-overlay"></div>
 

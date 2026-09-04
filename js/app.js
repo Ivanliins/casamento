@@ -4,6 +4,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   initPhoneIntro();
+  initResponsiveHeroVideo();
   initCountdown();
   initAudioPlayer();
   initScrollEffects();
@@ -48,7 +49,8 @@ function initPhoneIntro() {
       }
     }, 400);
 
-    // Iniciar vídeo de background do Hero
+    // Iniciar vídeo de background do Hero com a versão ideal para a tela
+    initResponsiveHeroVideo();
     const heroVideo = document.querySelector(".hero-video-bg");
     if (heroVideo) {
       heroVideo.play().catch(() => {});
@@ -100,6 +102,35 @@ function initPhoneIntro() {
     phoneMockup.addEventListener("touchend", unlockInvite);
   }
 }
+
+/* ==========================================================================
+   0.1 RESPONSIVE HERO VIDEO CONTROLLER (DESKTOP VS MOBILE)
+   ========================================================================== */
+function initResponsiveHeroVideo() {
+  const heroVideo = document.getElementById("hero-bg-video") || document.querySelector(".hero-video-bg");
+  if (!heroVideo) return;
+
+  const isMobile = window.innerWidth < 768;
+  const targetSrc = isMobile ? "video/casamentovideo.mp4" : "video/casamentodesktop.mp4";
+
+  const currentSrc = heroVideo.currentSrc || heroVideo.src || "";
+  if (!currentSrc.includes(targetSrc)) {
+    const isPaused = heroVideo.paused;
+    heroVideo.src = targetSrc;
+    heroVideo.load();
+    if (!isPaused) {
+      heroVideo.play().catch(() => {});
+    }
+  }
+}
+
+let _heroVideoResizeTimer;
+window.addEventListener("resize", () => {
+  clearTimeout(_heroVideoResizeTimer);
+  _heroVideoResizeTimer = setTimeout(() => {
+    initResponsiveHeroVideo();
+  }, 300);
+});
 
 /* ==========================================================================
    1. COUNTDOWN CONTROLLER (14 DE NOVEMBRO ÀS 12:00)
