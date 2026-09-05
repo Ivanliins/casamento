@@ -293,7 +293,8 @@ function initFloatingRsvpButton() {
    4. PIX GIFT REGISTRY & MODAL
    ========================================================================== */
 const PIX_CONFIG = {
-  key: "11999998888", // Chave Pix
+  key: "50310260817", // Chave Pix CPF dos noivos
+  keyType: "CPF",
   name: "Izabela e Ivan",
   city: "GUARULHOS"
 };
@@ -392,6 +393,29 @@ function initGiftRegistry() {
         }, 3000);
       });
     });
+  }
+
+  window.copyPixKeyDirectly = function() {
+    const key = PIX_CONFIG.key;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(key).then(() => {
+        showToast("Chave Pix CPF (" + key + ") copiada com sucesso! ✨");
+      }).catch(() => {
+        fallbackCopyKey(key);
+      });
+    } else {
+      fallbackCopyKey(key);
+    }
+  };
+
+  function fallbackCopyKey(text) {
+    const tempInput = document.createElement("input");
+    tempInput.value = text;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+    showToast("Chave Pix CPF (" + text + ") copiada! ✨");
   }
 }
 

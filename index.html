@@ -671,7 +671,13 @@
       </div>
 
       <!-- Copia e Cola Field -->
-      <div class="mt-4 space-y-2">
+      <div class="mt-4 space-y-2.5">
+        <div class="flex items-center justify-between text-xs text-stone-300 bg-[#120104]/70 border border-[#D4AF37]/30 rounded-lg px-3 py-2">
+          <span>Chave Pix (CPF): <strong class="text-[#FFE082] font-mono">503.102.608-17</strong></span>
+          <button type="button" onclick="copyPixKeyDirectly()" class="text-[#FFE082] hover:text-white flex items-center gap-1 font-semibold text-[11px] transition-colors" title="Copiar chave CPF">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copiar Chave
+          </button>
+        </div>
         <input type="text" id="pix-copia-cola-input" readonly class="w-full bg-[#150205] border border-[#D4AF37]/40 rounded-lg p-2.5 text-xs text-stone-300 font-mono text-center select-all" />
         <button id="copy-pix-btn" class="btn-gold w-full !py-3 !text-xs">
           <i data-lucide="copy" class="w-4 h-4"></i> Copiar Código Pix (Copia e Cola)
