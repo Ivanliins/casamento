@@ -463,7 +463,6 @@ function initRsvpForm() {
     const attending = radioYes.checked ? "yes" : "no";
     const guestsCount = attending === "yes" ? parseInt(document.getElementById("rsvp-guests-count").value) || 1 : 0;
     const guestsNames = attending === "yes" ? document.getElementById("rsvp-guests-names").value.trim() : "";
-    const dietary = attending === "yes" ? document.getElementById("rsvp-dietary").value.trim() : "";
     const message = document.getElementById("rsvp-message").value.trim();
 
     const rsvpData = {
@@ -472,7 +471,6 @@ function initRsvpForm() {
       attending,
       guestsCount,
       guestsNames,
-      dietary,
       message
     };
 
@@ -492,7 +490,6 @@ function initRsvpForm() {
       if (attending === "yes") {
         whatsappText += `👥 *Total de Pessoas:* ${guestsCount}\n`;
         if (guestsNames) whatsappText += `📝 *Acompanhantes:* ${guestsNames}\n`;
-        if (dietary) whatsappText += `🥗 *Restrição Alimentar:* ${dietary}\n`;
       }
       
       if (message) {
