@@ -422,7 +422,7 @@ function initGiftRegistry() {
 /* ==========================================================================
    5. RSVP DUAL ACTION (FIRESTORE + WHATSAPP)
    ========================================================================== */
-const NOIVOS_WHATSAPP = "5511999998888"; // WhatsApp dos noivos
+const NOIVOS_WHATSAPP = "5511962427416"; // WhatsApp dos noivos (Izabela & Ivan)
 
 function initRsvpForm() {
   const form = document.getElementById("rsvp-form");
