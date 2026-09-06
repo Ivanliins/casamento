@@ -508,7 +508,10 @@ function initRsvpForm() {
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalBtnText;
         if (window.lucide) lucide.createIcons();
-        window.open(whatsappUrl, "_blank");
+        const opened = window.open(whatsappUrl, "_blank");
+        if (!opened || opened.closed || typeof opened.closed === "undefined") {
+          window.location.href = whatsappUrl;
+        }
       }, 1200);
 
     } catch (err) {

@@ -72,8 +72,20 @@ e:/Casamento/
 ### 1. Execução Local Imediata
 Como o projeto utiliza tecnologias web nativas sem necessidade de compilação pesada, basta abrir o arquivo `index.html` diretamente em qualquer navegador moderno ou utilizar qualquer servidor estático local (como Live Server do VS Code, `npx serve .` ou `python -m http.server`).
 
-### 2. Configurar Firebase Firestore (Opcional para Nuvem)
-O sistema já funciona imediatamente em modo *Zero-Config* usando persistência local. Para sincronizar em múltiplos dispositivos via Google Cloud Firebase:
+### 2. Sincronização em Nuvem dos Convidados (Google Planilhas ou Firebase)
+O sistema opera em modo **Zero-Config** no navegador local e suporta sincronização global entre todos os celulares dos convidados e os noivos:
+
+#### Opção A (Recomendada): Conexão Direta com Google Planilhas (100% Grátis)
+1. Crie uma planilha em branco no seu Google Drive (ex: `Casamento Izabela e Ivan`).
+2. Acesse **Extensões > Apps Script**, apague o conteúdo e cole o código do arquivo `google-sheets-script.js`.
+3. Clique em **Implantar > Nova implantação > Aplicativo da Web**:
+   - *Executar como*: **Eu**
+   - *Quem pode acessar*: **Qualquer pessoa**
+4. Copie a URL gerada e cole no Painel dos Noivos (`admin.html`) clicando no botão **"Nuvem / Planilha"**!
+Pronto! Qualquer convidado que confirmar pelo celular sincronizará instantaneamente na sua planilha e no painel.
+
+#### Opção B: Firebase Firestore (Opcional)
+Para sincronizar via Google Cloud Firebase:
 1. Acesse o [Console do Firebase](https://console.firebase.google.com/).
 2. Crie um projeto e ative o **Cloud Firestore**.
 3. Copie suas credenciais para o arquivo `js/firebase-config.js`.
