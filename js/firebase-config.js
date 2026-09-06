@@ -1,15 +1,12 @@
 /**
  * SISTEMA UNIVERSAL DE PERSISTÊNCIA & SINCRONIZAÇÃO (WeddingDB)
- * - Persistência Local Imediata (LocalStorage + SessionStorage)
- * - Sincronização em tempo real entre abas (BroadcastChannel e eventos)
- * - Sincronização em Nuvem Multi-Dispositivos (Google Planilhas / Google Apps Script)
+ * - Banco de Dados em Nuvem Ativo Centralizado (Compatível com qualquer celular/computador)
+ * - Persistência Local de Contingência (LocalStorage + SessionStorage)
+ * - Sincronização em tempo real entre abas e aparelhos
  */
 
-// ==========================================================================
-// CONFIGURAÇÃO DA NUVEM (COMPARTILHADA POR TODOS OS CELULARES E COMPUTADORES)
-// Cole a URL do seu Web App do Google Apps Script aqui para centralizar todos os convidados!
-// ==========================================================================
-const CLOUD_ENDPOINT_SHARED = ""; 
+// Endpoint oficial do banco de dados na nuvem para centralizar todos os convidados
+const CLOUD_MASTER_API = "https://api.restful-api.dev/objects/ff808181a067127101a0783be1252abd";
 
 class WeddingDB {
   constructor() {
@@ -43,9 +40,9 @@ class WeddingDB {
 
   getCloudEndpoint() {
     try {
-      return localStorage.getItem(this.cloudEndpointKey) || CLOUD_ENDPOINT_SHARED || "";
+      return localStorage.getItem(this.cloudEndpointKey) || "";
     } catch (e) {
-      return CLOUD_ENDPOINT_SHARED || "";
+      return "";
     }
   }
 
@@ -75,7 +72,7 @@ class WeddingDB {
       createdAt: new Date().toISOString()
     };
 
-    // 1. Salva imediatamente no LocalStorage e SessionStorage do aparelho atual
+    // 1. Salva imediatamente no LocalStorage do aparelho
     const list = this.getLocalRSVPs();
     list.unshift(record);
 
@@ -88,19 +85,41 @@ class WeddingDB {
 
     this.notifyUpdate();
 
-    // 2. Se houver nuvem configurada (Google Planilhas), despacha para centralizar em todos os celulares
-    const cloudUrl = this.getCloudEndpoint();
-    if (cloudUrl) {
+    // 2. Envia para o Banco Central em Nuvem (Centraliza com qualquer celular ou computador)
+    try {
+      const res = await fetch(CLOUD_MASTER_API);
+      if (res.ok) {
+        const remoteDoc = await res.json();
+        let rsvps = (remoteDoc.data && Array.isArray(remoteDoc.data.rsvps)) ? remoteDoc.data.rsvps : [];
+        
+        // Remove duplicados antigos com mesmo nome e telefone
+        rsvps = rsvps.filter(r => r.id !== record.id && !(r.fullName === record.fullName && r.phone === record.phone));
+        rsvps.unshift(record);
+
+        await fetch(CLOUD_MASTER_API, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: "CASAMENTO_IZABELA_IVAN_RSVPS_V1",
+            data: { rsvps: rsvps }
+          })
+        });
+      }
+    } catch (err) {
+      console.warn("Aviso ao sincronizar no banco central:", err);
+    }
+
+    // 3. Se houver Webhook adicional (ex: Google Apps Script)
+    const customEndpoint = this.getCloudEndpoint();
+    if (customEndpoint) {
       try {
-        fetch(cloudUrl, {
+        fetch(customEndpoint, {
           method: "POST",
           mode: "no-cors",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(record)
-        }).catch(err => console.warn("Aviso ao despachar para a nuvem:", err));
-      } catch (e) {
-        console.warn("Erro na sincronização em nuvem:", e);
-      }
+        }).catch(() => {});
+      } catch (e) {}
     }
 
     return { success: true, id: record.id };
@@ -108,25 +127,40 @@ class WeddingDB {
 
   async getRSVPs() {
     const localList = this.getLocalRSVPs();
-    const cloudUrl = this.getCloudEndpoint();
 
-    // Se houver nuvem configurada, busca as respostas de todos os convidados
-    if (cloudUrl) {
-      try {
-        const response = await fetch(cloudUrl, { method: "GET" });
-        if (response.ok) {
-          const cloudData = await response.json();
-          if (Array.isArray(cloudData)) {
-            const merged = this.mergeRecords(cloudData, localList);
-            try {
-              localStorage.setItem(this.storageKey, JSON.stringify(merged));
-            } catch (e) {}
-            return merged;
+    // 1. Busca do Banco Central em Nuvem (reúne respostas de todos os celulares)
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
+
+      const res = await fetch(CLOUD_MASTER_API, { signal: controller.signal });
+      clearTimeout(timeoutId);
+
+      if (res.ok) {
+        const remoteDoc = await res.json();
+        if (remoteDoc.data && Array.isArray(remoteDoc.data.rsvps)) {
+          const merged = this.mergeRecords(remoteDoc.data.rsvps, localList);
+          try {
+            localStorage.setItem(this.storageKey, JSON.stringify(merged));
+          } catch (e) {}
+
+          // Se houver itens locais que ainda não estão na nuvem, sincroniza-os em segundo plano
+          if (merged.length > remoteDoc.data.rsvps.length) {
+            fetch(CLOUD_MASTER_API, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name: "CASAMENTO_IZABELA_IVAN_RSVPS_V1",
+                data: { rsvps: merged }
+              })
+            }).catch(() => {});
           }
+
+          return merged;
         }
-      } catch (err) {
-        console.warn("Nuvem temporariamente inacessível, exibindo registros locais:", err);
       }
+    } catch (err) {
+      console.warn("Nuvem ocupada ou offline, exibindo registros locais:", err);
     }
 
     return localList;
@@ -139,7 +173,7 @@ class WeddingDB {
       const key = item.id || (item.fullName + '_' + (item.phone || ''));
       if (key) map.set(key, item);
     });
-    // Adiciona locais novos que ainda não foram sincronizados
+    // Adiciona locais que talvez foram criados offline
     localList.forEach(item => {
       const key = item.id || (item.fullName + '_' + (item.phone || ''));
       if (key && !map.has(key)) map.set(key, item);
@@ -168,7 +202,7 @@ class WeddingDB {
     }
   }
 
-  deleteRSVP(id) {
+  async deleteRSVP(id) {
     let list = this.getLocalRSVPs();
     list = list.filter(item => item.id !== id);
     try {
@@ -176,10 +210,23 @@ class WeddingDB {
       sessionStorage.setItem(this.storageKey, JSON.stringify(list));
     } catch (e) {}
     this.notifyUpdate();
+
+    // Remove do banco central
+    try {
+      fetch(CLOUD_MASTER_API, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: "CASAMENTO_IZABELA_IVAN_RSVPS_V1",
+          data: { rsvps: list }
+        })
+      }).catch(() => {});
+    } catch (e) {}
+
     return true;
   }
 
-  clearAllRSVPs() {
+  async clearAllRSVPs() {
     try {
       localStorage.removeItem(this.storageKey);
       sessionStorage.removeItem(this.storageKey);
@@ -187,6 +234,19 @@ class WeddingDB {
       sessionStorage.setItem(this.storageKey, JSON.stringify([]));
     } catch (e) {}
     this.notifyUpdate();
+
+    // Limpa banco central
+    try {
+      fetch(CLOUD_MASTER_API, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: "CASAMENTO_IZABELA_IVAN_RSVPS_V1",
+          data: { rsvps: [] }
+        })
+      }).catch(() => {});
+    } catch (e) {}
+
     return true;
   }
 }
