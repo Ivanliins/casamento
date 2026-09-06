@@ -2,8 +2,14 @@
  * SISTEMA UNIVERSAL DE PERSISTÊNCIA & SINCRONIZAÇÃO (WeddingDB)
  * - Persistência Local Imediata (LocalStorage + SessionStorage)
  * - Sincronização em tempo real entre abas (BroadcastChannel e eventos)
- * - Suporte opcional a Nuvem (Google Planilhas) sem bloquear a interface
+ * - Sincronização em Nuvem Multi-Dispositivos (Google Planilhas / Google Apps Script)
  */
+
+// ==========================================================================
+// CONFIGURAÇÃO DA NUVEM (COMPARTILHADA POR TODOS OS CELULARES E COMPUTADORES)
+// Cole a URL do seu Web App do Google Apps Script aqui para centralizar todos os convidados!
+// ==========================================================================
+const CLOUD_ENDPOINT_SHARED = ""; 
 
 class WeddingDB {
   constructor() {
@@ -37,9 +43,9 @@ class WeddingDB {
 
   getCloudEndpoint() {
     try {
-      return localStorage.getItem(this.cloudEndpointKey) || "";
+      return localStorage.getItem(this.cloudEndpointKey) || CLOUD_ENDPOINT_SHARED || "";
     } catch (e) {
-      return "";
+      return CLOUD_ENDPOINT_SHARED || "";
     }
   }
 
@@ -69,7 +75,7 @@ class WeddingDB {
       createdAt: new Date().toISOString()
     };
 
-    // 1. Salva imediatamente no LocalStorage e SessionStorage
+    // 1. Salva imediatamente no LocalStorage e SessionStorage do aparelho atual
     const list = this.getLocalRSVPs();
     list.unshift(record);
 
@@ -82,7 +88,7 @@ class WeddingDB {
 
     this.notifyUpdate();
 
-    // 2. Se houver nuvem configurada, despacha em segundo plano sem travar o usuário
+    // 2. Se houver nuvem configurada (Google Planilhas), despacha para centralizar em todos os celulares
     const cloudUrl = this.getCloudEndpoint();
     if (cloudUrl) {
       try {
@@ -91,15 +97,54 @@ class WeddingDB {
           mode: "no-cors",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(record)
-        }).catch(() => {});
-      } catch (e) {}
+        }).catch(err => console.warn("Aviso ao despachar para a nuvem:", err));
+      } catch (e) {
+        console.warn("Erro na sincronização em nuvem:", e);
+      }
     }
 
     return { success: true, id: record.id };
   }
 
   async getRSVPs() {
-    return this.getLocalRSVPs();
+    const localList = this.getLocalRSVPs();
+    const cloudUrl = this.getCloudEndpoint();
+
+    // Se houver nuvem configurada, busca as respostas de todos os convidados
+    if (cloudUrl) {
+      try {
+        const response = await fetch(cloudUrl, { method: "GET" });
+        if (response.ok) {
+          const cloudData = await response.json();
+          if (Array.isArray(cloudData)) {
+            const merged = this.mergeRecords(cloudData, localList);
+            try {
+              localStorage.setItem(this.storageKey, JSON.stringify(merged));
+            } catch (e) {}
+            return merged;
+          }
+        }
+      } catch (err) {
+        console.warn("Nuvem temporariamente inacessível, exibindo registros locais:", err);
+      }
+    }
+
+    return localList;
+  }
+
+  mergeRecords(remoteList, localList) {
+    const map = new Map();
+    // Prioriza remotos
+    remoteList.forEach(item => {
+      const key = item.id || (item.fullName + '_' + (item.phone || ''));
+      if (key) map.set(key, item);
+    });
+    // Adiciona locais novos que ainda não foram sincronizados
+    localList.forEach(item => {
+      const key = item.id || (item.fullName + '_' + (item.phone || ''));
+      if (key && !map.has(key)) map.set(key, item);
+    });
+    return Array.from(map.values()).sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
   }
 
   getLocalRSVPs() {
@@ -110,7 +155,6 @@ class WeddingDB {
         if (Array.isArray(parsed)) return parsed;
       }
       
-      // Fallback para sessionStorage
       const sessionData = sessionStorage.getItem(this.storageKey);
       if (sessionData) {
         const parsedSession = JSON.parse(sessionData);

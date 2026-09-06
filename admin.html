@@ -96,6 +96,9 @@
         <button id="admin-add-guest-btn" class="px-3.5 py-2.5 rounded-xl border border-emerald-500/50 bg-emerald-950/40 text-emerald-300 hover:bg-emerald-900/60 hover:text-white transition-all text-xs font-semibold flex items-center gap-1.5 shadow-lg">
           <i data-lucide="user-plus" class="w-4 h-4 text-emerald-400"></i> + Adicionar Convidado
         </button>
+        <button id="admin-cloud-btn" class="px-3.5 py-2.5 rounded-xl border border-sky-500/40 bg-sky-950/30 text-sky-200 hover:bg-sky-900/50 hover:text-white transition-all text-xs font-semibold flex items-center gap-1.5 shadow-lg" title="Sincronizar confirmações de todos os celulares via Google Planilhas">
+          <i data-lucide="cloud" class="w-4 h-4 text-sky-300"></i> Nuvem / Planilha
+        </button>
         <button id="admin-refresh-btn" class="px-3.5 py-2.5 rounded-xl border border-amber-500/40 bg-amber-950/30 text-amber-200 hover:bg-amber-900/50 hover:text-white transition-all text-xs font-semibold flex items-center gap-1.5 shadow-lg" title="Recarregar dados mais recentes">
           <i data-lucide="refresh-cw" class="w-4 h-4 text-amber-300"></i> Atualizar
         </button>
@@ -252,6 +255,76 @@
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       4. MODAL DE CONEXÃO COM GOOGLE PLANILHAS (SINCRONIZAÇÃO ENTRE CELULARES)
+       ========================================================================== -->
+  <div id="admin-cloud-modal" class="modal-backdrop">
+    <div class="modal-content-luxury relative max-w-xl text-left">
+      <button id="close-cloud-modal" class="absolute top-4 right-4 text-stone-400 hover:text-white p-2 rounded-full transition-colors" aria-label="Fechar">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 rounded-xl bg-sky-950/80 border border-sky-500/50 flex items-center justify-center text-sky-400">
+          <i data-lucide="cloud" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="font-serif text-xl font-bold text-white">Centralizar Todos os Celulares</h3>
+          <p class="text-xs text-stone-400">Conecte sua Planilha Google gratuita para ver as confirmações de qualquer pessoa.</p>
+        </div>
+      </div>
+
+      <div class="space-y-4 text-xs text-stone-300">
+        <div class="p-3.5 rounded-xl bg-[#120104]/80 border border-[#3c0914] space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="font-semibold text-stone-200">Status da Sincronização:</span>
+            <span id="cloud-status-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-stone-800 text-stone-400">Modo Local</span>
+          </div>
+          <p class="text-[11px] text-stone-400 leading-relaxed">
+            Sem a nuvem, cada convidado grava no próprio celular. Ao conectar sua Planilha Google, <strong>todas as confirmações de qualquer lugar caem no mesmo painel dos noivos em tempo real!</strong>
+          </p>
+        </div>
+
+        <div>
+          <label for="cloud-endpoint-input" class="block text-xs font-semibold uppercase tracking-wider text-[#FFE082] mb-1.5">
+            URL do Web App (Google Apps Script):
+          </label>
+          <input 
+            type="url" 
+            id="cloud-endpoint-input" 
+            placeholder="https://script.google.com/macros/s/.../exec" 
+            class="form-control-luxury !py-2.5 !text-xs w-full font-mono"
+          />
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 pt-1">
+          <button id="cloud-save-btn" class="btn-gold !text-xs !py-2.5 !px-4 flex items-center gap-1.5">
+            <i data-lucide="check" class="w-4 h-4"></i> Salvar e Sincronizar
+          </button>
+          <button id="cloud-test-btn" class="px-3.5 py-2.5 rounded-xl border border-sky-500/40 bg-sky-950/40 text-sky-300 hover:bg-sky-900/60 hover:text-white transition-all text-xs font-semibold flex items-center gap-1.5">
+            <i data-lucide="activity" class="w-4 h-4"></i> Testar Conexão
+          </button>
+          <button id="cloud-disconnect-btn" class="px-3.5 py-2.5 rounded-xl border border-stone-700 bg-stone-900/40 text-stone-400 hover:text-rose-400 transition-all text-xs font-semibold flex items-center gap-1.5">
+            <i data-lucide="unlink" class="w-4 h-4"></i> Desconectar
+          </button>
+        </div>
+
+        <!-- Passo a Passo -->
+        <details open class="p-3.5 rounded-xl bg-[#1a0206]/60 border border-[#3c0914] text-[11px]">
+          <summary class="font-semibold text-[#FFE082] cursor-pointer select-none">
+            📖 Como ativar em 2 minutos (100% Grátis):
+          </summary>
+          <div class="mt-2.5 space-y-2 text-stone-300 pl-2 border-l border-[#D4AF37]/30">
+            <p>1. Acesse <strong><a href="https://sheets.new" target="_blank" class="text-[#FFE082] underline">sheets.new</a></strong> e crie uma planilha no Google Drive.</p>
+            <p>2. Clique em <strong>Extensões > Apps Script</strong>, apague tudo e cole o conteúdo do arquivo <code>google-sheets-script.js</code>.</p>
+            <p>3. Clique em <strong>Implantar > Nova implantação</strong>. Escolha tipo <strong>Aplicativo da Web</strong>, marque <em>Quem pode acessar</em> como <strong>Qualquer pessoa</strong> e clique em Implantar.</p>
+            <p>4. Copie a URL gerada e cole no campo acima!</p>
+          </div>
+        </details>
+      </div>
     </div>
   </div>
 

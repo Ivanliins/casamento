@@ -481,23 +481,23 @@ function initRsvpForm() {
       // 1. Salvar no Banco de Dados (Local / Nuvem)
       await window.weddingDB.saveRSVP(rsvpData);
 
-      // 2. Formatar Mensagem Elegante para o WhatsApp sem caracteres corrompidos
-      let whatsappText = `*CONFIRMAÇÃO DE PRESENÇA*\n`;
-      whatsappText += `*Casamento Izabela & Ivan*\n\n`;
-      whatsappText += `• *Nome:* ${fullName}\n`;
-      whatsappText += `• *Telefone:* ${phone}\n`;
-      whatsappText += `• *Status:* ${attending === 'yes' ? 'SIM, EU VOU!' : 'NÃO PODEREI IR'}\n`;
+      // 2. Formatar Mensagem com os Ícones Oficiais para o WhatsApp
+      let whatsappText = `✨ *CONFIRMAÇÃO DE PRESENÇA - CASAMENTO* ✨\n`;
+      whatsappText += `💍 *Izabela & Ivan*\n\n`;
+      whatsappText += `👤 *Nome:* ${fullName}\n`;
+      whatsappText += `📱 *Telefone:* ${phone}\n`;
+      whatsappText += `✨ *Status:* ${attending === 'yes' ? '✅ SIM, EU VOU!' : '❌ Não poderei comparecer'}\n`;
       
       if (attending === "yes") {
-        whatsappText += `• *Total de Pessoas:* ${guestsCount}\n`;
-        if (guestsNames) whatsappText += `• *Acompanhantes:* ${guestsNames}\n`;
+        whatsappText += `👥 *Total de Pessoas:* ${guestsCount}\n`;
+        if (guestsNames) whatsappText += `📝 *Acompanhantes:* ${guestsNames}\n`;
       }
       
       if (message) {
-        whatsappText += `\n• *Recado para os noivos:*\n"${message}"\n`;
+        whatsappText += `\n💌 *Recado para os noivos:*\n"${message}"\n`;
       }
       
-      whatsappText += `\n_Enviado através do site oficial do casamento._`;
+      whatsappText += `\n🥂 _Enviado através do site oficial do casamento._`;
 
       const encodedMsg = encodeURIComponent(whatsappText);
       // Link universal do WhatsApp (compatível 100% com iPhone, Android e Desktop)

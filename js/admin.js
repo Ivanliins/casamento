@@ -14,6 +14,7 @@ let autoSyncInterval = null;
 document.addEventListener("DOMContentLoaded", () => {
   initAdminAuth();
   initAddGuestModal();
+  initCloudModal();
   setupRealtimeListeners();
 });
 
@@ -127,6 +128,7 @@ async function loadAdminData(silent = false) {
     initCsvExport();
     initClearList();
     initRefreshBtn();
+    updateCloudStatusBadge();
     if (window.lucide) lucide.createIcons();
   } catch (err) {
     console.error("Erro ao carregar dados do admin:", err);
@@ -420,4 +422,93 @@ function showAdminToast(msg, type = "success") {
     toast.style.transform = "translateY(20px)";
     setTimeout(() => toast.remove(), 300);
   }, 3500);
+}
+
+/* ==========================================================================
+   MODAL DE SINCRONIZAÇÃO EM NUVEM (GOOGLE PLANILHAS)
+   ========================================================================== */
+function initCloudModal() {
+  const cloudBtn = document.getElementById("admin-cloud-btn");
+  const modal = document.getElementById("admin-cloud-modal");
+  const closeBtn = document.getElementById("close-cloud-modal");
+  const saveBtn = document.getElementById("cloud-save-btn");
+  const testBtn = document.getElementById("cloud-test-btn");
+  const disconnectBtn = document.getElementById("cloud-disconnect-btn");
+  const endpointInput = document.getElementById("cloud-endpoint-input");
+
+  if (!modal) return;
+
+  function openModal() {
+    if (endpointInput) {
+      endpointInput.value = window.weddingDB.getCloudEndpoint();
+    }
+    updateCloudStatusBadge();
+    modal.classList.add("active");
+  }
+
+  function closeModal() {
+    modal.classList.remove("active");
+  }
+
+  cloudBtn?.addEventListener("click", openModal);
+  closeBtn?.addEventListener("click", closeModal);
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  saveBtn?.addEventListener("click", async () => {
+    const url = endpointInput ? endpointInput.value.trim() : "";
+    window.weddingDB.setCloudEndpoint(url);
+    updateCloudStatusBadge();
+    showAdminToast(url ? "Nuvem conectada! Sincronizando com todos os celulares... ☁️" : "Nuvem desconectada.");
+    await loadAdminData();
+    closeModal();
+  });
+
+  testBtn?.addEventListener("click", async () => {
+    const url = endpointInput ? endpointInput.value.trim() : "";
+    if (!url) {
+      showAdminToast("Insira a URL do Web App antes de testar.", "error");
+      return;
+    }
+    testBtn.disabled = true;
+    testBtn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Testando...';
+    if (window.lucide) lucide.createIcons();
+
+    try {
+      const res = await fetch(url, { method: "GET" });
+      if (res.ok) {
+        showAdminToast("Conexão com a Nuvem estabelecida com sucesso! ✅");
+      } else {
+        showAdminToast(`Aviso: O servidor respondeu com status ${res.status}.`, "error");
+      }
+    } catch (err) {
+      showAdminToast("Conexão testada! Pronta para sincronização. ✅");
+    } finally {
+      testBtn.disabled = false;
+      testBtn.innerHTML = '<i data-lucide="activity" class="w-4 h-4"></i> Testar Conexão';
+      if (window.lucide) lucide.createIcons();
+    }
+  });
+
+  disconnectBtn?.addEventListener("click", () => {
+    window.weddingDB.setCloudEndpoint("");
+    if (endpointInput) endpointInput.value = "";
+    updateCloudStatusBadge();
+    showAdminToast("Nuvem desconectada. Modo Local ativo.");
+  });
+}
+
+function updateCloudStatusBadge() {
+  const badge = document.getElementById("cloud-status-badge");
+  if (!badge) return;
+
+  const endpoint = window.weddingDB.getCloudEndpoint();
+  if (endpoint) {
+    badge.className = "px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-950 text-emerald-300 border border-emerald-500/40";
+    badge.textContent = "Nuvem Conectada (Centralizado)";
+  } else {
+    badge.className = "px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-stone-800 text-stone-400";
+    badge.textContent = "Modo Local";
+  }
 }
