@@ -118,14 +118,25 @@ class WeddingDB {
         if (res.ok) {
           const rawData = await res.json();
           if (Array.isArray(rawData)) {
-            // Filtra linhas de cabeçalho da planilha
-            const validData = rawData.filter(item => 
-              item && 
-              item.id !== "ID" && 
-              item.fullName !== "Nome Completo" &&
-              item.fullName && 
-              item.fullName.trim() !== ""
-            );
+            // Filtra linhas de cabeçalho da planilha e normaliza tipos
+            const validData = rawData
+              .filter(item => 
+                item && 
+                item.id !== "ID" && 
+                item.fullName !== "Nome Completo" &&
+                item.fullName && 
+                String(item.fullName).trim() !== ""
+              )
+              .map(item => ({
+                id: String(item.id || ('rsvp_' + Math.random().toString(36).substr(2, 6))),
+                fullName: String(item.fullName || 'Sem nome').trim(),
+                phone: String(item.phone || '').trim(),
+                attending: String(item.attending || '').toLowerCase().includes('sim') || item.attending === 'yes' ? 'yes' : 'no',
+                guestsCount: parseInt(item.guestsCount) || (item.attending === 'no' ? 0 : 1),
+                guestsNames: String(item.guestsNames || '').trim(),
+                message: String(item.message || '').trim(),
+                createdAt: item.createdAt || new Date().toISOString()
+              }));
 
             const merged = this.mergeRecords(validData, localList);
             try {

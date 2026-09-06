@@ -193,12 +193,12 @@ function renderTable(data) {
       ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-950 text-emerald-300 border border-emerald-500/30">Confirmado</span>`
       : `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-950 text-rose-300 border border-rose-500/30">Não Comparecerá</span>`;
 
-    const cleanPhone = (item.phone || '').replace(/\D/g, '');
+    const cleanPhone = String(item.phone || '').replace(/\D/g, '');
     const phoneDisplay = cleanPhone 
       ? `<a href="https://wa.me/${cleanPhone}" target="_blank" class="text-[#FFE082] hover:underline inline-flex items-center gap-1">
-          <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-400"></i> ${escapeHtml(item.phone || "-")}
+          <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-400"></i> ${escapeHtml(String(item.phone || "-"))}
         </a>`
-      : `<span class="text-stone-400">${escapeHtml(item.phone || "-")}</span>`;
+      : `<span class="text-stone-400">${escapeHtml(String(item.phone || "-"))}</span>`;
 
     const companionsText = item.guestsNames ? `<span class="text-[11px] text-stone-400 block">${escapeHtml(item.guestsNames)}</span>` : '';
 
@@ -240,7 +240,7 @@ function initAdminFilters() {
 
     const filtered = allRsvps.filter(item => {
       const matchQuery = (item.fullName || "").toLowerCase().includes(q) || 
-                         (item.phone || "").includes(q) || 
+                         String(item.phone || "").includes(q) || 
                          (item.guestsNames || "").toLowerCase().includes(q) ||
                          (item.message || "").toLowerCase().includes(q);
       const matchStatus = status === "all" || item.attending === status;
