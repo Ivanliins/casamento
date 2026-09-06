@@ -326,7 +326,7 @@ body {
   left: 0;
   right: 0;
   z-index: 100;
-  padding: 1rem 1.5rem;
+  padding: calc(1rem + env(safe-area-inset-top, 0px)) 1.5rem 1rem;
   transition: var(--transition-smooth);
 }
 
@@ -336,7 +336,7 @@ body {
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(212, 175, 55, 0.25);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-  padding: 0.75rem 1.5rem;
+  padding: calc(0.75rem + env(safe-area-inset-top, 0px)) 1.5rem 0.75rem;
 }
 
 .floating-audio-btn {
@@ -604,14 +604,17 @@ body {
 
 @media (max-width: 640px) {
   .hero-section {
-    padding: 4.75rem 0.85rem 1.75rem;
+    padding-top: calc(6.75rem + env(safe-area-inset-top, 0px));
+    padding-bottom: 2rem;
+    padding-left: 0.85rem;
+    padding-right: 0.85rem;
     min-height: 100svh;
     align-items: flex-start;
   }
 
   .hero-content-wrapper {
-    padding-top: 0.5rem !important;
-    padding-bottom: 1rem !important;
+    padding-top: 0.75rem !important;
+    padding-bottom: 1.25rem !important;
   }
 
   .hero-top-blessing {
