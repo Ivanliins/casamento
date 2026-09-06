@@ -1,9 +1,11 @@
 /**
- * SISTEMA UNIVERSAL DE PERSISTÊNCIA & SINCRONIZAÇÃO (WeddingDB)
- * - Persistência Imediata (LocalStorage + SessionStorage)
- * - Sincronização em Tempo Real (BroadcastChannel entre abas)
- * - Conexão Ilimitada com Google Planilhas (via Google Apps Script Web App)
+ * SISTEMA UNIVERSAL DE PERSISTÊNCIA & SINCRONIZAÇÃO EM NUVEM (WeddingDB)
+ * - Conexão Real e Ilimitada com Google Planilhas (Google Apps Script Oficial dos Noivos)
+ * - Sincronização entre qualquer celular e computador do mundo
+ * - Cache local para carregamento instantâneo
  */
+
+const CLOUD_ENDPOINT_OFFICIAL = "https://script.google.com/macros/s/AKfycbwgxLnTcKUN9c2dpzrelZcxvs8DdcC0-CO-rUYo7abiTmwmhaTqnEQ94dPtQB5br3th/exec";
 
 class WeddingDB {
   constructor() {
@@ -37,9 +39,9 @@ class WeddingDB {
 
   getCloudEndpoint() {
     try {
-      return localStorage.getItem(this.cloudEndpointKey) || "";
+      return localStorage.getItem(this.cloudEndpointKey) || CLOUD_ENDPOINT_OFFICIAL;
     } catch (e) {
-      return "";
+      return CLOUD_ENDPOINT_OFFICIAL;
     }
   }
 
@@ -69,9 +71,8 @@ class WeddingDB {
       createdAt: new Date().toISOString()
     };
 
-    // 1. Salva imediatamente no LocalStorage e SessionStorage do navegador
+    // 1. Salva imediatamente no LocalStorage e SessionStorage do navegador atual
     const list = this.getLocalRSVPs();
-    // Remove duplicados antigos com mesmo nome e telefone
     const filtered = list.filter(r => !(r.fullName === record.fullName && r.phone === record.phone));
     filtered.unshift(record);
 
@@ -84,7 +85,7 @@ class WeddingDB {
 
     this.notifyUpdate();
 
-    // 2. Se houver conexão com Google Planilhas (Apps Script), envia em segundo plano
+    // 2. Envia para a Planilha Google Oficial (recebe de qualquer celular do mundo)
     const cloudUrl = this.getCloudEndpoint();
     if (cloudUrl) {
       try {
@@ -94,29 +95,39 @@ class WeddingDB {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(record)
         }).catch(err => console.warn("Aviso ao enviar para Google Planilhas:", err));
-      } catch (e) {}
+      } catch (e) {
+        console.warn("Erro ao despachar requisição:", e);
+      }
     }
 
     return { success: true, id: record.id };
   }
 
   async getRSVPs() {
-    let localList = this.getLocalRSVPs();
-
-    // Se houver Google Planilhas configurado, sincroniza todas as respostas de outros celulares
+    const localList = this.getLocalRSVPs();
     const cloudUrl = this.getCloudEndpoint();
+
     if (cloudUrl) {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3500);
+        const timeoutId = setTimeout(() => controller.abort(), 4500);
 
-        const res = await fetch(cloudUrl, { method: "GET", signal: controller.signal });
+        const res = await fetch(cloudUrl, { method: "GET", redirect: "follow", signal: controller.signal });
         clearTimeout(timeoutId);
 
         if (res.ok) {
-          const cloudData = await res.json();
-          if (Array.isArray(cloudData)) {
-            const merged = this.mergeRecords(cloudData, localList);
+          const rawData = await res.json();
+          if (Array.isArray(rawData)) {
+            // Filtra linhas de cabeçalho da planilha
+            const validData = rawData.filter(item => 
+              item && 
+              item.id !== "ID" && 
+              item.fullName !== "Nome Completo" &&
+              item.fullName && 
+              item.fullName.trim() !== ""
+            );
+
+            const merged = this.mergeRecords(validData, localList);
             try {
               localStorage.setItem(this.storageKey, JSON.stringify(merged));
             } catch (e) {}
@@ -133,10 +144,12 @@ class WeddingDB {
 
   mergeRecords(remoteList, localList) {
     const map = new Map();
+    // Prioriza registros remotos da planilha
     remoteList.forEach(item => {
       const key = item.id || (item.fullName + '_' + (item.phone || ''));
       if (key) map.set(key, item);
     });
+    // Adiciona itens locais que ainda não sincronizaram
     localList.forEach(item => {
       const key = item.id || (item.fullName + '_' + (item.phone || ''));
       if (key && !map.has(key)) map.set(key, item);
@@ -149,13 +162,13 @@ class WeddingDB {
       const data = localStorage.getItem(this.storageKey);
       if (data) {
         const parsed = JSON.parse(data);
-        if (Array.isArray(parsed)) return parsed;
+        if (Array.isArray(parsed)) return parsed.filter(i => i && i.id !== "ID" && i.fullName !== "Nome Completo");
       }
       
       const sessionData = sessionStorage.getItem(this.storageKey);
       if (sessionData) {
         const parsedSession = JSON.parse(sessionData);
-        if (Array.isArray(parsedSession)) return parsedSession;
+        if (Array.isArray(parsedSession)) return parsedSession.filter(i => i && i.id !== "ID" && i.fullName !== "Nome Completo");
       }
 
       return [];
