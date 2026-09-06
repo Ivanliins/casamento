@@ -63,7 +63,7 @@
           loop 
           playsinline 
           poster="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop">
-          <source src="video/casamentovideo.mp4" type="video/mp4" />
+          <source src="video/casamentonomobile.mp4" type="video/mp4" />
         </video>
 
         <!-- Smartphone Overlay Content -->
@@ -157,8 +157,8 @@
     <section class="hero-section">
       <!-- Luxury Video Background (Responsivo Desktop e Mobile) -->
       <video id="hero-bg-video" class="hero-video-bg" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1920&auto=format&fit=crop">
-        <source src="video/casamentodesktop.mp4" type="video/mp4" media="(min-width: 768px)" />
-        <source src="video/casamentovideo.mp4" type="video/mp4" />
+        <source src="video/casamentocomputador.mp4" type="video/mp4" media="(min-width: 768px)" />
+        <source src="video/casamentonomobile.mp4" type="video/mp4" />
       </video>
       <div class="hero-overlay"></div>
 
@@ -416,13 +416,13 @@
       <!-- Luxury Gold Framed Video Player -->
       <div class="luxury-video-frame max-w-4xl mx-auto shadow-2xl">
         <div class="luxury-video-inner">
-          <video 
+          <video id="ensaio-video" muted   
             controls 
             playsinline 
             preload="metadata"
             class="w-full h-full object-cover"
             poster="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1920&auto=format&fit=crop">
-            <source src="video/casamentodesktop.mp4" type="video/mp4" />
+            <source src="video/casamentocomputador.mp4" type="video/mp4" />
             Seu navegador não suporta a tag de vídeo.
           </video>
         </div>
@@ -441,7 +441,7 @@
           <i data-lucide="mail-check" class="gold-divider-icon"></i>
         </div>
         <p class="text-stone-300 max-w-lg mx-auto text-sm">
-          Por favor, confirme sua presença até o dia <strong>01 de Novembro de 2026</strong> para que possamos organizar tudo com muito carinho para você.
+          Por favor, confirme sua presença até o dia <strong>31 de Outubro de 2026</strong> para que possamos organizar tudo com muito carinho para você.
         </p>
       </div>
 
@@ -710,5 +710,25 @@
       lucide.createIcons();
     }
   </script>
+
+<!-- Script de Auto-Play no Scroll para o Vídeo de Fotos -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const ensaioVideo = document.getElementById("ensaio-video");
+    if (ensaioVideo) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            ensaioVideo.play().catch(e => console.log("Autoplay bloqueado pelo navegador"));
+          } else {
+            ensaioVideo.pause();
+          }
+        });
+      }, { threshold: 0.3 });
+
+      observer.observe(ensaioVideo);
+    }
+  });
+</script>
 </body>
 </html>

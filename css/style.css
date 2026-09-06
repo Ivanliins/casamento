@@ -1719,3 +1719,52 @@ body {
 
 
 
+
+
+/* --- AJUSTES DE ESPAÇAMENTO E ALINHAMENTO DOS TÍTULOS --- */
+h1, h2, h3, h4, h5, h6, .section-title {
+    text-align: center !important;
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+    line-height: 1.3 !important;
+}
+
+.hero-content h1, .header h1 {
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+}
+
+/* Remove margens excessivas das seções para aproximar os conteudos */
+section {
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+}
+
+/* --- CORREÇÃO FINAL DE ESPAÇAMENTOS DAS IMAGENS --- */
+section, .section, .py-5, .py-4, .container-fluid, .wedding-event {
+    padding-top: 25px !important;
+    padding-bottom: 25px !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+header, .hero-wrap, .video-wrap {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0 !important;
+    margin-bottom: 10px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+p {
+    margin-top: 5px !important;
+    margin-bottom: 15px !important;
+}
+
+.title-section {
+    margin-bottom: 20px !important;
+}
