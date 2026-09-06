@@ -446,6 +446,9 @@ function initRsvpForm() {
     }
   }
 
+  // Suporte a mudanças nativas de rádio e toques em mobile
+  radioYes?.addEventListener("change", updateRadioState);
+  radioNo?.addEventListener("change", updateRadioState);
   cardYes?.addEventListener("click", () => { radioYes.checked = true; updateRadioState(); });
   cardNo?.addEventListener("click", () => { radioNo.checked = true; updateRadioState(); });
 
@@ -475,10 +478,8 @@ function initRsvpForm() {
     };
 
     try {
-      // 1. Salvar no Banco de Dados (Firestore / Local)
+      // 1. Salvar no Banco de Dados (Firestore / Local / Nuvem)
       await window.weddingDB.saveRSVP(rsvpData);
-
-      showToast("Presença registrada com sucesso! Redirecionando...");
 
       // 2. Formatar Mensagem Elegante para o WhatsApp
       let whatsappText = `✨ *CONFIRMAÇÃO DE PRESENÇA - CASAMENTO* ✨\n`;
@@ -499,20 +500,31 @@ function initRsvpForm() {
       whatsappText += `\n🥂 _Enviado através do site oficial do casamento._`;
 
       const encodedMsg = encodeURIComponent(whatsappText);
-      const whatsappUrl = `https://api.whatsapp.com/send?phone=${NOIVOS_WHATSAPP}&text=${encodedMsg}`;
+      // Link universal do WhatsApp (compatível 100% com iPhone, Android e Desktop)
+      const whatsappUrl = `https://wa.me/${NOIVOS_WHATSAPP}?text=${encodedMsg}`;
 
       form.reset();
       updateRadioState();
 
-      setTimeout(() => {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalBtnText;
-        if (window.lucide) lucide.createIcons();
-        const opened = window.open(whatsappUrl, "_blank");
-        if (!opened || opened.closed || typeof opened.closed === "undefined") {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnText;
+      if (window.lucide) lucide.createIcons();
+
+      showToast(`Presença registrada com sucesso! Abrindo WhatsApp... <a href="${whatsappUrl}" class="underline font-bold text-[#FFE082] block mt-1">Toque aqui se não abrir</a>`);
+
+      // Detecção de dispositivo móvel
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+
+      if (isMobile) {
+        // No mobile: universal link direto na mesma janela (evita bloqueio de pop-up do Safari e Chrome Mobile)
+        window.location.href = whatsappUrl;
+      } else {
+        // No desktop: abre em nova aba
+        const win = window.open(whatsappUrl, "_blank");
+        if (!win || win.closed || typeof win.closed === "undefined") {
           window.location.href = whatsappUrl;
         }
-      }, 1200);
+      }
 
     } catch (err) {
       console.error(err);
