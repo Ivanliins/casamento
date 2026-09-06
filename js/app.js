@@ -57,9 +57,10 @@ function initPhoneIntro() {
       heroVideo.play().catch(() => {});
     }
 
-    // Iniciar áudio ambiente de forma robusta no mobile
+    // Iniciar áudio ambiente com 50% do volume
     if (audio) {
       audio.muted = false;
+      audio.volume = 0.5;
       const playPromise = audio.play();
       if (playPromise !== undefined) {
         playPromise.then(() => {
@@ -68,11 +69,12 @@ function initPhoneIntro() {
             audioBtn.innerHTML = '<i data-lucide="volume-2" class="w-5 h-5"></i>';
             if (window.lucide) lucide.createIcons();
           }
-          showAudioBubble("Tocando: Stephen Sanchez — Until I Found You 🎵", "volume-2");
+          showAudioBubble("Stephen Sanchez — Until I Found You 🎵", "volume-2");
         }).catch(err => {
           console.warn("Audio autoplay blocked by mobile policy:", err);
           // Fallback para toque posterior
           const touchToPlay = () => {
+            audio.volume = 0.5;
             audio.play().then(() => {
               if (audioBtn) {
                 audioBtn.classList.add("playing");
@@ -179,7 +181,7 @@ function showAudioBubble(text, iconName = "music") {
   const bubble = document.getElementById("audio-status-bubble");
   if (!bubble) return;
 
-  bubble.innerHTML = `<i data-lucide="${iconName}" class="w-4 h-4 text-[#FFE082]"></i> <span id="audio-status-text">${text}</span>`;
+  bubble.innerHTML = `<i data-lucide="${iconName}" class="w-3.5 h-3.5 text-[#FFE082] flex-shrink-0"></i> <span id="audio-status-text">${text}</span>`;
   if (window.lucide) lucide.createIcons();
 
   bubble.classList.add("show");
@@ -195,6 +197,9 @@ function initAudioPlayer() {
 
   if (!audioBtn || !audio) return;
 
+  // Volume pré-fixado em 50%
+  audio.volume = 0.5;
+
   let isPlaying = false;
 
   audioBtn.addEventListener("click", () => {
@@ -202,15 +207,16 @@ function initAudioPlayer() {
       audio.pause();
       audioBtn.classList.remove("playing");
       audioBtn.innerHTML = '<i data-lucide="music" class="w-5 h-5"></i>';
-      showAudioBubble("Música Pausada 🔇", "volume-x");
+      showAudioBubble("Música pausada 🔇", "volume-x");
     } else {
+      audio.volume = 0.5;
       audio.play().then(() => {
         audioBtn.classList.add("playing");
         audioBtn.innerHTML = '<i data-lucide="volume-2" class="w-5 h-5"></i>';
-        showAudioBubble("Tocando: Stephen Sanchez — Until I Found You 🎵", "volume-2");
+        showAudioBubble("Stephen Sanchez — Until I Found You 🎵", "volume-2");
       }).catch(err => {
         console.warn("Audio autoplay policy:", err);
-        showAudioBubble("Toque para ativar o áudio 🎵", "music");
+        showAudioBubble("Toque para ativar áudio 🎵", "music");
       });
     }
     isPlaying = !isPlaying;
