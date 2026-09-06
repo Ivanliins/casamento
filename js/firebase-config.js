@@ -78,44 +78,8 @@ class WeddingDB {
     try {
       const data = localStorage.getItem(this.storageKey);
       if (!data) {
-        // Dados de demonstração elegantes iniciais se vazio
-        const initialData = [
-          {
-            id: 'rsvp_demo_1',
-            fullName: "Mariana & Carlos Silveira",
-            phone: "+55 11 98888-7777",
-            attending: "yes",
-            guestsCount: 2,
-            guestsNames: "Mariana Silveira, Carlos Silveira",
-            dietary: "Nenhuma",
-            message: "Que alegria imensa celebrar essa união! Estaremos lá com certeza para brindar com vocês. ❤️",
-            createdAt: new Date(Date.now() - 3600000 * 24 * 2).toISOString()
-          },
-          {
-            id: 'rsvp_demo_2',
-            fullName: "Lucas Albuquerque",
-            phone: "+55 11 97777-6666",
-            attending: "yes",
-            guestsCount: 1,
-            guestsNames: "Lucas Albuquerque",
-            dietary: "Vegetariano",
-            message: "Parabéns ao casal mais lindo! Muito amor e cumplicidade sempre.",
-            createdAt: new Date(Date.now() - 3600000 * 18).toISOString()
-          },
-          {
-            id: 'rsvp_demo_3',
-            fullName: "Fernanda Costa",
-            phone: "+55 21 99999-5555",
-            attending: "no",
-            guestsCount: 0,
-            guestsNames: "",
-            dietary: "",
-            message: "Infelizmente estarei em viagem a trabalho, mas meu coração estará com vocês! Toda felicidade do mundo!",
-            createdAt: new Date(Date.now() - 3600000 * 5).toISOString()
-          }
-        ];
-        localStorage.setItem(this.storageKey, JSON.stringify(initialData));
-        return initialData;
+        localStorage.setItem(this.storageKey, JSON.stringify([]));
+        return [];
       }
       return JSON.parse(data);
     } catch (e) {
@@ -127,6 +91,11 @@ class WeddingDB {
     let list = this.getLocalRSVPs();
     list = list.filter(item => item.id !== id);
     localStorage.setItem(this.storageKey, JSON.stringify(list));
+    return true;
+  }
+
+  clearAllRSVPs() {
+    localStorage.setItem(this.storageKey, JSON.stringify([]));
     return true;
   }
 }

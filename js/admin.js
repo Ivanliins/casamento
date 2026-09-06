@@ -50,6 +50,7 @@ async function loadAdminData() {
   renderTable(allRsvps);
   initAdminFilters();
   initCsvExport();
+  initClearList();
   if (window.lucide) lucide.createIcons();
 }
 
@@ -166,6 +167,25 @@ function initCsvExport() {
     document.body.removeChild(link);
 
     showAdminToast("Planilha CSV exportada com sucesso! 📊");
+  });
+}
+
+function initClearList() {
+  const clearBtn = document.getElementById("admin-clear-list-btn");
+  if (!clearBtn || clearBtn.dataset.bound) return;
+  clearBtn.dataset.bound = "true";
+
+  clearBtn.addEventListener("click", async () => {
+    if (allRsvps.length === 0) {
+      showAdminToast("A lista já está vazia.", "error");
+      return;
+    }
+
+    if (confirm("⚠️ Tem certeza que deseja apagar TODOS os registros de convidados da lista? Esta ação não pode ser desfeita.")) {
+      window.weddingDB.clearAllRSVPs();
+      showAdminToast("Todos os registros foram removidos com sucesso!");
+      await loadAdminData();
+    }
   });
 }
 
