@@ -149,85 +149,19 @@ class WeddingDB {
       const data = localStorage.getItem(this.storageKey);
       if (data) {
         const parsed = JSON.parse(data);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          // Garante que "cansei" e "Izabela" estejam presentes se ainda não estiverem
-          this.ensureDefaultGuests(parsed);
-          return parsed;
-        }
+        if (Array.isArray(parsed)) return parsed;
       }
       
       const sessionData = sessionStorage.getItem(this.storageKey);
       if (sessionData) {
         const parsedSession = JSON.parse(sessionData);
-        if (Array.isArray(parsedSession) && parsedSession.length > 0) {
-          this.ensureDefaultGuests(parsedSession);
-          return parsedSession;
-        }
+        if (Array.isArray(parsedSession)) return parsedSession;
       }
-      
-      // Lista base com os envios confirmados
-      const baseList = [
-        {
-          id: "rsvp_cansei_01",
-          fullName: "cansei",
-          phone: "(11) 96242-7416",
-          attending: "yes",
-          guestsCount: 1,
-          guestsNames: "",
-          message: "Confirmação realizada",
-          createdAt: new Date().toISOString()
-        },
-        {
-          id: "rsvp_izabela_01",
-          fullName: "Izabela",
-          phone: "(11) 96242-7416",
-          attending: "no",
-          guestsCount: 0,
-          guestsNames: "",
-          message: "Parabéns",
-          createdAt: new Date(Date.now() - 1800000).toISOString()
-        }
-      ];
 
-      try {
-        localStorage.setItem(this.storageKey, JSON.stringify(baseList));
-      } catch (e) {}
-
-      return baseList;
+      return [];
     } catch (e) {
       console.error("Erro ao carregar RSVPs locais:", e);
       return [];
-    }
-  }
-
-  ensureDefaultGuests(list) {
-    const hasCansei = list.some(r => (r.fullName || "").toLowerCase() === "cansei");
-    const hasIzabela = list.some(r => (r.fullName || "").toLowerCase() === "izabela");
-
-    if (!hasCansei) {
-      list.unshift({
-        id: "rsvp_cansei_01",
-        fullName: "cansei",
-        phone: "(11) 96242-7416",
-        attending: "yes",
-        guestsCount: 1,
-        guestsNames: "",
-        message: "Confirmação realizada",
-        createdAt: new Date().toISOString()
-      });
-    }
-
-    if (!hasIzabela) {
-      list.push({
-        id: "rsvp_izabela_01",
-        fullName: "Izabela",
-        phone: "(11) 96242-7416",
-        attending: "no",
-        guestsCount: 0,
-        guestsNames: "",
-        message: "Parabéns",
-        createdAt: new Date(Date.now() - 1800000).toISOString()
-      });
     }
   }
 

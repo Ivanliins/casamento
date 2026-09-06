@@ -42,6 +42,12 @@ function initAdminAuth() {
     sessionStorage.setItem("admin_logged", "true");
     localStorage.setItem("admin_logged", "true");
 
+    // Limpa a lista para o novo teste solicitado pelos noivos
+    if (localStorage.getItem("admin_cleaned_v3") !== "true") {
+      window.weddingDB.clearAllRSVPs();
+      localStorage.setItem("admin_cleaned_v3", "true");
+    }
+
     loadAdminData();
     startAutoSync();
   }
