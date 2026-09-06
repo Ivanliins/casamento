@@ -462,7 +462,7 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 5.5rem 1.5rem 3.5rem;
+  padding: 6rem 1.5rem 3.5rem !important;
   overflow: hidden;
 }
 
@@ -604,17 +604,17 @@ body {
 
 @media (max-width: 640px) {
   .hero-section {
-    padding-top: calc(6.75rem + env(safe-area-inset-top, 0px));
-    padding-bottom: 2rem;
-    padding-left: 0.85rem;
-    padding-right: 0.85rem;
+    padding-top: calc(7rem + env(safe-area-inset-top, 0px)) !important;
+    padding-bottom: 2rem !important;
+    padding-left: 0.85rem !important;
+    padding-right: 0.85rem !important;
     min-height: 100svh;
     align-items: flex-start;
   }
 
   .hero-content-wrapper {
-    padding-top: 0.75rem !important;
-    padding-bottom: 1.25rem !important;
+    padding-top: 1rem !important;
+    padding-bottom: 1.5rem !important;
   }
 
   .hero-top-blessing {
@@ -1738,13 +1738,13 @@ h1, h2, h3, h4, h5, h6, .section-title {
 }
 
 /* Remove margens excessivas das seções para aproximar os conteudos */
-section {
+section:not(.hero-section) {
     padding-top: 40px !important;
     padding-bottom: 40px !important;
 }
 
 /* --- CORREÇÃO FINAL DE ESPAÇAMENTOS DAS IMAGENS --- */
-section, .section, .py-5, .py-4, .container-fluid, .wedding-event {
+section:not(.hero-section), .section, .py-5, .py-4, .container-fluid, .wedding-event {
     padding-top: 25px !important;
     padding-bottom: 25px !important;
     margin-top: 0 !important;
