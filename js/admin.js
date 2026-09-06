@@ -3,16 +3,17 @@
  * - Autenticação por PIN
  * - Sincronização em tempo real (Local + Nuvem)
  * - Gestão de confirmações, acompanhantes e recados
+ * - Inserção manual de convidados
  * - Exportação para Excel / CSV
  */
 
-const ADMIN_PIN = "2026"; // PIN de acesso rápido dos noivos
+const ADMIN_PIN = "2026"; // PIN de acesso dos noivos
 let allRsvps = [];
 let autoSyncInterval = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   initAdminAuth();
-  initCloudModal();
+  initAddGuestModal();
   setupRealtimeListeners();
 });
 
@@ -85,16 +86,16 @@ function initAdminAuth() {
 
 function startAutoSync() {
   if (autoSyncInterval) clearInterval(autoSyncInterval);
-  // Sincroniza a cada 15 segundos em segundo plano se o painel estiver aberto
+  // Atualiza suavemente a cada 10 segundos se o painel estiver aberto
   autoSyncInterval = setInterval(() => {
     loadAdminData(true);
-  }, 15000);
+  }, 10000);
 }
 
 function setupRealtimeListeners() {
-  // 1. Ouve mudanças no LocalStorage de outras abas
+  // 1. Ouve mudanças no LocalStorage de outras abas ou janelas
   window.addEventListener("storage", (e) => {
-    if (e.key === "wedding_rsvps_database" || e.key === "wedding_cloud_endpoint") {
+    if (e.key === "wedding_rsvps_database") {
       loadAdminData(true);
     }
   });
@@ -126,7 +127,6 @@ async function loadAdminData(silent = false) {
     initCsvExport();
     initClearList();
     initRefreshBtn();
-    updateCloudStatusBadge();
     if (window.lucide) lucide.createIcons();
   } catch (err) {
     console.error("Erro ao carregar dados do admin:", err);
@@ -167,11 +167,11 @@ function renderTable(data) {
             </div>
             <h4 class="text-sm font-semibold text-white">Nenhuma confirmação registrada ainda</h4>
             <p class="text-xs text-stone-400">
-              Quando seus convidados confirmarem presença no site, eles aparecerão aqui instantaneamente.
+              Quando seus convidados confirmarem presença no site, eles aparecerão aqui instantaneamente. Você também pode adicionar manualmente.
             </p>
             <div class="pt-2 flex items-center justify-center gap-2">
-              <button onclick="simulateTestGuest()" class="btn-gold !text-xs !py-2 !px-4 inline-flex items-center gap-1.5 shadow-lg">
-                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Criar Convidado de Demonstração
+              <button onclick="openAddGuestModal()" class="btn-gold !text-xs !py-2 !px-4 inline-flex items-center gap-1.5 shadow-lg">
+                <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Adicionar Convidado
               </button>
             </div>
           </div>
@@ -196,7 +196,7 @@ function renderTable(data) {
       ? `<a href="https://wa.me/${cleanPhone}" target="_blank" class="text-[#FFE082] hover:underline inline-flex items-center gap-1">
           <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-400"></i> ${escapeHtml(item.phone || "-")}
         </a>`
-      : `<span class="text-stone-400">-</span>`;
+      : `<span class="text-stone-400">${escapeHtml(item.phone || "-")}</span>`;
 
     const companionsText = item.guestsNames ? `<span class="text-[11px] text-stone-400 block">${escapeHtml(item.guestsNames)}</span>` : '';
 
@@ -263,19 +263,28 @@ function initCsvExport() {
       return;
     }
 
-    const headers = ["ID", "Nome Completo", "Telefone", "Confirmou Presenca", "Total Pessoas", "Acompanhantes", "Mensagem", "Data de Resposta"];
-    const rows = allRsvps.map(item => [
-      `"${item.id || ''}"`,
-      `"${(item.fullName || '').replace(/"/g, '""')}"`,
-      `"${(item.phone || '').replace(/"/g, '""')}"`,
-      `"${item.attending === 'yes' ? 'SIM' : 'NAO'}"`,
-      item.attending === 'yes' ? (item.guestsCount || 1) : 0,
-      `"${(item.guestsNames || '').replace(/"/g, '""')}"`,
-      `"${(item.message || '').replace(/"/g, '""')}"`,
-      `"${item.createdAt || ''}"`
-    ]);
+    let csvContent = "\uFEFF"; // BOM UTF-8 para abrir no Excel do Brasil
+    csvContent += "Nome Completo;Telefone;Status;Total de Pessoas;Acompanhantes;Recado;Data da Resposta\n";
 
-    const csvContent = "\uFEFF" + [headers.join(";"), ...rows.map(e => e.join(";"))].join("\r\n");
+    allRsvps.forEach(row => {
+      const isYes = row.attending === "yes";
+      const statusText = isYes ? "Confirmado" : "Não Comparecerá";
+      const total = isYes ? (row.guestsCount || 1) : 0;
+      const date = row.createdAt ? new Date(row.createdAt).toLocaleString("pt-BR") : "";
+
+      const cleanCol = (str) => `"${String(str || '').replace(/"/g, '""')}"`;
+
+      csvContent += [
+        cleanCol(row.fullName),
+        cleanCol(row.phone),
+        cleanCol(statusText),
+        cleanCol(total),
+        cleanCol(row.guestsNames || ""),
+        cleanCol(row.message || ""),
+        cleanCol(date)
+      ].join(";") + "\n";
+    });
+
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
@@ -324,110 +333,61 @@ function initRefreshBtn() {
 }
 
 /* ==========================================================================
-   MODAL DE SINCRONIZAÇÃO EM NUVEM (GOOGLE PLANILHAS)
+   MODAL ADICIONAR CONVIDADO MANUALMENTE
    ========================================================================== */
-function initCloudModal() {
-  const cloudBtn = document.getElementById("admin-cloud-btn");
-  const modal = document.getElementById("admin-cloud-modal");
-  const closeBtn = document.getElementById("close-cloud-modal");
-  const saveBtn = document.getElementById("cloud-save-btn");
-  const testBtn = document.getElementById("cloud-test-btn");
-  const disconnectBtn = document.getElementById("cloud-disconnect-btn");
-  const endpointInput = document.getElementById("cloud-endpoint-input");
+function initAddGuestModal() {
+  const addBtn = document.getElementById("admin-add-guest-btn");
+  const modal = document.getElementById("admin-add-modal");
+  const closeBtn = document.getElementById("close-add-modal");
+  const cancelBtn = document.getElementById("cancel-add-guest-btn");
+  const form = document.getElementById("admin-add-guest-form");
 
   if (!modal) return;
 
-  function openModal() {
-    if (endpointInput) {
-      endpointInput.value = window.weddingDB.getCloudEndpoint();
-    }
-    updateCloudStatusBadge();
+  window.openAddGuestModal = function() {
     modal.classList.add("active");
-  }
+    const firstInput = document.getElementById("manual-name");
+    if (firstInput) setTimeout(() => firstInput.focus(), 100);
+  };
 
   function closeModal() {
     modal.classList.remove("active");
   }
 
-  cloudBtn?.addEventListener("click", openModal);
+  addBtn?.addEventListener("click", window.openAddGuestModal);
   closeBtn?.addEventListener("click", closeModal);
+  cancelBtn?.addEventListener("click", closeModal);
   modal.addEventListener("click", (e) => {
     if (e.target === modal) closeModal();
   });
 
-  saveBtn?.addEventListener("click", async () => {
-    const url = endpointInput ? endpointInput.value.trim() : "";
-    window.weddingDB.setCloudEndpoint(url);
-    updateCloudStatusBadge();
-    showAdminToast(url ? "Conexão em Nuvem configurada com sucesso! ☁️" : "Nuvem desconectada.");
-    await loadAdminData();
-    closeModal();
-  });
+  if (form && !form.dataset.bound) {
+    form.dataset.bound = "true";
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fullName = document.getElementById("manual-name").value.trim();
+      const phone = document.getElementById("manual-phone").value.trim();
+      const attending = document.getElementById("manual-status").value;
+      const guestsCount = attending === "yes" ? parseInt(document.getElementById("manual-guests-count").value) || 1 : 0;
+      const guestsNames = attending === "yes" ? document.getElementById("manual-companions").value.trim() : "";
+      const message = document.getElementById("manual-message").value.trim();
 
-  testBtn?.addEventListener("click", async () => {
-    const url = endpointInput ? endpointInput.value.trim() : "";
-    if (!url) {
-      showAdminToast("Insira a URL do Web App antes de testar.", "error");
-      return;
-    }
-    testBtn.disabled = true;
-    testBtn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Testando...';
-    if (window.lucide) lucide.createIcons();
+      await window.weddingDB.saveRSVP({
+        fullName,
+        phone,
+        attending,
+        guestsCount,
+        guestsNames,
+        message
+      });
 
-    try {
-      const res = await fetch(url, { method: "GET" });
-      if (res.ok) {
-        showAdminToast("Conexão com a Nuvem estabelecida com sucesso! ✅");
-      } else {
-        showAdminToast(`Aviso: O servidor respondeu com status ${res.status}.`, "error");
-      }
-    } catch (err) {
-      // Muitos Google Apps Scripts redirecionam ou bloqueiam CORS simples em GET, mas aceitam POST
-      showAdminToast("Conexão testada! Pronta para sincronização. ✅");
-    } finally {
-      testBtn.disabled = false;
-      testBtn.innerHTML = '<i data-lucide="activity" class="w-4 h-4"></i> Testar Conexão';
-      if (window.lucide) lucide.createIcons();
-    }
-  });
-
-  disconnectBtn?.addEventListener("click", () => {
-    window.weddingDB.setCloudEndpoint("");
-    if (endpointInput) endpointInput.value = "";
-    updateCloudStatusBadge();
-    showAdminToast("Nuvem desconectada. Modo Local ativo.");
-  });
-}
-
-function updateCloudStatusBadge() {
-  const badge = document.getElementById("cloud-status-badge");
-  if (!badge) return;
-
-  const endpoint = window.weddingDB.getCloudEndpoint();
-  if (endpoint) {
-    badge.className = "px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-950 text-emerald-300 border border-emerald-500/40";
-    badge.textContent = "Nuvem Conectada (Google Planilhas)";
-  } else {
-    badge.className = "px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-stone-800 text-stone-300 border border-stone-700";
-    badge.textContent = "Modo Local (Navegador)";
+      form.reset();
+      closeModal();
+      showAdminToast("Convidado adicionado ao painel com sucesso! 🎉");
+      await loadAdminData();
+    });
   }
 }
-
-// Convidado de simulação para o casal testar com 1 clique
-window.simulateTestGuest = async function() {
-  const testRecord = {
-    fullName: "Lucas Silveira (Convidado Teste)",
-    phone: "(11) 98765-4321",
-    attending: "yes",
-    guestsCount: 2,
-    guestsNames: "Lucas Silveira e Marina Silveira",
-    message: "Que honra celebrar esse momento tão especial com vocês! Felicidades eternas aos noivos! ❤️🥂"
-  };
-
-  await window.weddingDB.saveRSVP(testRecord);
-  showAdminToast("Convidado de teste adicionado com sucesso! 🎉");
-  await loadAdminData();
-};
 
 window.deleteGuest = async function(id) {
   if (confirm("Deseja realmente remover esta resposta de presença?")) {
@@ -461,4 +421,3 @@ function showAdminToast(msg, type = "success") {
     setTimeout(() => toast.remove(), 300);
   }, 3500);
 }
-

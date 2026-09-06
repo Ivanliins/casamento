@@ -478,26 +478,26 @@ function initRsvpForm() {
     };
 
     try {
-      // 1. Salvar no Banco de Dados (Firestore / Local / Nuvem)
+      // 1. Salvar no Banco de Dados (Local / Nuvem)
       await window.weddingDB.saveRSVP(rsvpData);
 
-      // 2. Formatar Mensagem Elegante para o WhatsApp
-      let whatsappText = `✨ *CONFIRMAÇÃO DE PRESENÇA - CASAMENTO* ✨\n`;
-      whatsappText += `💍 *Izabela & Ivan*\n\n`;
-      whatsappText += `👤 *Nome:* ${fullName}\n`;
-      whatsappText += `📱 *Telefone:* ${phone}\n`;
-      whatsappText += `✨ *Status:* ${attending === 'yes' ? '✅ SIM, EU VOU!' : '❌ Não poderei comparecer'}\n`;
+      // 2. Formatar Mensagem Elegante para o WhatsApp sem caracteres corrompidos
+      let whatsappText = `*CONFIRMAÇÃO DE PRESENÇA*\n`;
+      whatsappText += `*Casamento Izabela & Ivan*\n\n`;
+      whatsappText += `• *Nome:* ${fullName}\n`;
+      whatsappText += `• *Telefone:* ${phone}\n`;
+      whatsappText += `• *Status:* ${attending === 'yes' ? 'SIM, EU VOU!' : 'NÃO PODEREI IR'}\n`;
       
       if (attending === "yes") {
-        whatsappText += `👥 *Total de Pessoas:* ${guestsCount}\n`;
-        if (guestsNames) whatsappText += `📝 *Acompanhantes:* ${guestsNames}\n`;
+        whatsappText += `• *Total de Pessoas:* ${guestsCount}\n`;
+        if (guestsNames) whatsappText += `• *Acompanhantes:* ${guestsNames}\n`;
       }
       
       if (message) {
-        whatsappText += `\n💌 *Recado para os noivos:*\n"${message}"\n`;
+        whatsappText += `\n• *Recado para os noivos:*\n"${message}"\n`;
       }
       
-      whatsappText += `\n🥂 _Enviado através do site oficial do casamento._`;
+      whatsappText += `\n_Enviado através do site oficial do casamento._`;
 
       const encodedMsg = encodeURIComponent(whatsappText);
       // Link universal do WhatsApp (compatível 100% com iPhone, Android e Desktop)
@@ -510,21 +510,24 @@ function initRsvpForm() {
       submitBtn.innerHTML = originalBtnText;
       if (window.lucide) lucide.createIcons();
 
-      showToast(`Presença registrada com sucesso! Abrindo WhatsApp... <a href="${whatsappUrl}" class="underline font-bold text-[#FFE082] block mt-1">Toque aqui se não abrir</a>`);
+      showToast(`Presença confirmada com sucesso! Abrindo WhatsApp... <a href="${whatsappUrl}" target="_blank" class="underline font-bold text-[#FFE082] block mt-1">Clique aqui se o WhatsApp não abrir</a>`);
 
       // Detecção de dispositivo móvel
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
 
       if (isMobile) {
-        // Garante 400ms para o navegador mobile persistir o LocalStorage antes de transferir para o WhatsApp
+        // Garante buffer para o navegador mobile persistir os dados antes de transferir para o WhatsApp
         setTimeout(() => {
           window.location.href = whatsappUrl;
         }, 400);
       } else {
-        // No desktop: abre em nova aba
+        // No desktop: abre o WhatsApp Web em nova aba sem sair do site
         const win = window.open(whatsappUrl, "_blank");
         if (!win || win.closed || typeof win.closed === "undefined") {
-          window.location.href = whatsappUrl;
+          // Se o navegador bloquear o popup, redireciona suavemente após 1 segundo
+          setTimeout(() => {
+            window.location.href = whatsappUrl;
+          }, 1200);
         }
       }
 
