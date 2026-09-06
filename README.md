@@ -60,7 +60,7 @@ e:/Casamento/
    - **Ação 2**: Redirecionamento automático para o WhatsApp dos noivos com a mensagem formatada com emojis e detalhes da confirmação.
 
 6. **Painel Administrativo VIP dos Noivos (`admin.html`)**:
-   - Acesso seguro protegido por PIN (PIN padrão: `2026`).
+   - Acesso seguro protegido por PIN (PIN: `1329`).
    - Métricas em tempo real: Confirmados, Total de Pessoas (com acompanhantes), Recusados, Restrições Alimentares e Mensagens carinhosas.
    - Barra de pesquisa e filtro de status reativo.
    - **Exportação para CSV / Excel** com 1 clique (formatação UTF-8 compatível).

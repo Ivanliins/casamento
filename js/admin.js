@@ -7,7 +7,7 @@
  * - Exportação para Excel / CSV
  */
 
-const ADMIN_PIN = "2026"; // PIN de acesso dos noivos
+const ADMIN_PIN = "1329"; // PIN de acesso dos noivos
 let allRsvps = [];
 let autoSyncInterval = null;
 
@@ -47,7 +47,7 @@ function initAdminAuth() {
 
   function doLogin() {
     const enteredPin = pinInput ? pinInput.value.trim() : "";
-    if (enteredPin === ADMIN_PIN || enteredPin === "admin123") {
+    if (enteredPin === ADMIN_PIN) {
       showDashboard();
       showAdminToast("Bem-vindo ao Painel dos Noivos! 💍✨");
     } else {
