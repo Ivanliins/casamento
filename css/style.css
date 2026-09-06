@@ -604,8 +604,8 @@ body {
 
 @media (max-width: 640px) {
   .hero-section {
-    padding-top: calc(7rem + env(safe-area-inset-top, 0px)) !important;
-    padding-bottom: 2rem !important;
+    padding-top: calc(4.6rem + env(safe-area-inset-top, 0px)) !important;
+    padding-bottom: 1.75rem !important;
     padding-left: 0.85rem !important;
     padding-right: 0.85rem !important;
     min-height: 100svh;
@@ -613,8 +613,8 @@ body {
   }
 
   .hero-content-wrapper {
-    padding-top: 1rem !important;
-    padding-bottom: 1.5rem !important;
+    padding-top: 0.35rem !important;
+    padding-bottom: 1rem !important;
   }
 
   .hero-top-blessing {
