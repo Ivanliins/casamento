@@ -89,13 +89,14 @@ class WeddingDB {
       createdAt: new Date().toISOString()
     };
 
-    // 1. Salvar no LocalStorage (Garante funcionamento instantâneo)
+    // 1. Salvar no LocalStorage e SessionStorage (Garante persistência em qualquer modo do navegador)
     const list = this.getLocalRSVPs();
     list.unshift(record);
     try {
       localStorage.setItem(this.storageKey, JSON.stringify(list));
+      sessionStorage.setItem(this.storageKey, JSON.stringify(list));
     } catch (e) {
-      console.error("Erro ao gravar no localStorage:", e);
+      console.error("Erro ao gravar no storage:", e);
     }
 
     this.notifyUpdate();
@@ -186,12 +187,15 @@ class WeddingDB {
 
   getLocalRSVPs() {
     try {
-      const data = localStorage.getItem(this.storageKey);
+      let data = localStorage.getItem(this.storageKey);
+      if (!data || data === "[]") {
+        data = sessionStorage.getItem(this.storageKey);
+      }
       if (!data) {
-        localStorage.setItem(this.storageKey, JSON.stringify([]));
         return [];
       }
-      return JSON.parse(data);
+      const parsed = JSON.parse(data);
+      return Array.isArray(parsed) ? parsed : [];
     } catch (e) {
       return [];
     }
@@ -202,6 +206,7 @@ class WeddingDB {
     list = list.filter(item => item.id !== id);
     try {
       localStorage.setItem(this.storageKey, JSON.stringify(list));
+      sessionStorage.setItem(this.storageKey, JSON.stringify(list));
     } catch (e) {}
     this.notifyUpdate();
     return true;
@@ -210,6 +215,7 @@ class WeddingDB {
   clearAllRSVPs() {
     try {
       localStorage.setItem(this.storageKey, JSON.stringify([]));
+      sessionStorage.setItem(this.storageKey, JSON.stringify([]));
     } catch (e) {}
     this.notifyUpdate();
     return true;

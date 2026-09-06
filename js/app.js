@@ -516,8 +516,10 @@ function initRsvpForm() {
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
 
       if (isMobile) {
-        // No mobile: universal link direto na mesma janela (evita bloqueio de pop-up do Safari e Chrome Mobile)
-        window.location.href = whatsappUrl;
+        // Garante 400ms para o navegador mobile persistir o LocalStorage antes de transferir para o WhatsApp
+        setTimeout(() => {
+          window.location.href = whatsappUrl;
+        }, 400);
       } else {
         // No desktop: abre em nova aba
         const win = window.open(whatsappUrl, "_blank");
